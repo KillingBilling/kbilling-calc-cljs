@@ -1,9 +1,9 @@
 (ns kbilling.plans
   (:require [cljs.nodejs :as node]))
 
+
 (defn -main [& args]
-  (println (apply str (map [\ "world" "hello"] [2 0 1])))
-  )
+  (println "Hello"))
 
 
 (node/enable-util-print!)
