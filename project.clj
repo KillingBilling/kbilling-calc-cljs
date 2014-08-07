@@ -11,7 +11,7 @@
 
   :hooks [leiningen.cljsbuild]
 
-  :cljsbuild {:test-commands {"unit-tests" ["node" :node-runner "target/test.js"]}
+  :cljsbuild {:test-commands {"unit-tests" ["node" "target/test.js"]}
               :builds        [{:source-paths ["src"]
                                :compiler     {:target        :nodejs
                                               :output-to     "target/main.js"
