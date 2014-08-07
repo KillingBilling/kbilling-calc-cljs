@@ -1,11 +1,16 @@
 (ns kbilling.plans-test
-  (:require [cemerick.cljs.test :refer [is deftest with-test run-tests testing test-var]]
-            [kbilling.plans :as plans]))
+  (:require-macros [cemerick.cljs.test
+                    :refer (is deftest with-test run-tests testing test-var)])
+  (:require [cemerick.cljs.test :as t]
+            [cljs.nodejs :as node]))
 
-(deftest a-test
-         (testing "FIXME, I fail."
-                  (is (= 0 1))))
-
+;should PASS
 (deftest somewhat-less-wat
          (is (= "{}[]" (+ {} []))))
 
+;should PASS
+(deftest javascript-allows-div0
+         (is (= js/Infinity (/ 1 0) (/ (int 1) (int 0)))))
+
+(node/enable-util-print!)
+(set! *main-cli-fn* t/run-all-tests)
