@@ -7,6 +7,8 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2280"]]
 
+  :node-dependencies [[bignumber.js "^1.4.1"]]
+
   :hooks [leiningen.cljsbuild]
 
   :cljsbuild {:test-commands {"unit-tests" ["node" "target/test.js"]}
