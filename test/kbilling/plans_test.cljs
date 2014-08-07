@@ -2,16 +2,11 @@
   (:require-macros [cemerick.cljs.test
                     :refer (is deftest with-test run-tests testing test-var)])
   (:require [kbilling.plans :as p]
-            [cemerick.cljs.test :as t]
-            [cljs.nodejs :as node]))
+            [cemerick.cljs.test :as t]))
 
 
-(deftest load-plan-spec
+(deftest load-plan
          (is (= '("cycles" "values" "notifications")
                 (keys (p/load-plan "test/kbilling/plans/examples/basic"))))
          (is (= ["monthly"]
                 (get-in (p/load-plan "test/kbilling/plans/examples/basic") ["cycles" "$subscription" "$begin"]))))
-
-
-(node/enable-util-print!)
-(set! *main-cli-fn* t/run-all-tests)
