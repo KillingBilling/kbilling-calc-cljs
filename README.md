@@ -4,6 +4,10 @@ A Clojure library designed to ... well, that part is up to you.
 
 ## Development
 
+### Testing
+
+Type `lein test`: it will launch ClojureScript tests with `node target/test.js` (can also be run directly). 
+
 ### REPL
 
 To start Node.js ClojureScript REPL, run `lein repl` and then enter: 
