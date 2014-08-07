@@ -2,9 +2,18 @@
 
 A Clojure library designed to ... well, that part is up to you.
 
-## Usage
+## Development
 
-FIXME
+### REPL
+
+To start Node.js ClojureScript REPL, run `lein repl` and then enter: 
+
+```clojure
+(require '[cljs.repl.node :as nr])
+(nr/run-node-nrepl)
+```
+
+Type `:cljs/quit` to stop the ClojureScript REPL.
 
 ## License
 

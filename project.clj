@@ -22,11 +22,10 @@
                                               :pretty-print  true}}]}
 
   :profiles {:dev {:plugins      [[lein-cljsbuild "1.0.3"]
-                                  ;[org.bodil/lein-noderepl "0.1.11"]
                                   [lein-npm "0.4.0"]]
                    :dependencies [[org.bodil/cljs-noderepl "0.1.11"]
                                   [com.cemerick/clojurescript.test "0.3.1"]]}}
 
-  :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
+  :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]} ;Node.js ClojureScript REPL support
 
   )
