@@ -4,8 +4,11 @@
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
 
+  :repositories [["sonatype" {:url       "https://oss.sonatype.org/content/repositories/releases"
+                              :snapshots false}]]
+
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2280"]]
+                 [org.clojure/clojurescript "0.0-2311"]]
 
   :node-dependencies [[bignumber.js "^1.4.1"]]
 
