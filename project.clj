@@ -10,7 +10,8 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2311"]]
 
-  :node-dependencies [[bignumber.js "^1.4.1"]]
+  :node-dependencies [[bignumber.js "^1.4.1"]
+                      [chai "^1.9.1"]]
 
   :hooks [leiningen.cljsbuild]
 
