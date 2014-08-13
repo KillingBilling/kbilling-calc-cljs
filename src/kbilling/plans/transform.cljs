@@ -11,11 +11,12 @@
 
 
 (defn aggregate [plan cycles vars buys]
-  (apply array-map
-         (flatten (for [[ck c] (plan "cycles") :when (or (= ck "$subscription") (contains? cycles ck))
-                        [acck acc] c :when (contains? buys acck)
-                        [aggk agg] acc]
-                    [($ ck acck aggk) ((agg "aggr") (or-init agg vars ($ ck acck aggk)) (buys acck))]))))
+  (apply hash-map
+         (for [[ck c] (plan "cycles") :when (or (= ck "$subscription") (contains? cycles ck))
+               [acck acc] c :when (contains? buys acck)
+               [aggk agg] acc
+               :let [k ($ ck acck aggk)]
+               _ [k ((agg "aggr") (or-init agg vars k) (buys acck))]] _)))
 
 
 (defn calculate [plan cycles cur])
