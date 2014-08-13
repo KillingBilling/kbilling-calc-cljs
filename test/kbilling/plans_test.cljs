@@ -6,7 +6,7 @@
 
 
 (deftest load-plan
-         (is (= ["cycles" "values" "notifications"]
-                (keys (p/load-plan "test/kbilling/plans/examples/basic"))))
-         (is (= ["monthly"]
-                (get-in (p/load-plan "test/kbilling/plans/examples/basic") ["cycles" "$subscription" "$begin"]))))
+  (is (= ["cycles" "values" "notifications"]
+         (keys (p/load-plan "test/kbilling/plans/examples/basic"))))
+  (is (= ["monthly"]
+         (get-in (p/load-plan "test/kbilling/plans/examples/basic") ["cycles" "$subscription" "$begin"]))))
