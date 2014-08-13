@@ -17,5 +17,5 @@
 (def basic-plan (p/load-plan "test/kbilling/plans/examples/basic"))
 
 (deftest aggregate
-  (is (= {"coverage$sum" "200"}
-         (tf/aggregate basic-plan ["monthly"] {"coverage" 0 "rub" 0} {"coverage" 200}))))
+  (is (= {"monthly$coverage$sum" "200"}
+         (tf/aggregate basic-plan #{"monthly"} {} {"coverage" 200}))))
