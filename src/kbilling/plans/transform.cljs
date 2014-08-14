@@ -18,7 +18,16 @@
              [k ((agg "aggr") (or-init (agg "init") (vars k)) (buys acck))])))
 
 
-(defn calculate [plan cycles cur])
+(defn calculate-no-values [plan cycles vars cur]
+  (into {} (for [[ck c] (plan "cycles") :when (or (= ck "$subscription") (contains? cycles ck))
+                 [acck acc] c :let [cost (acc "$cost")]]
+             '???)))
+
+(defn calculate-values [plan cur])
+
+(defn calculate [plan cycles vars cur]
+  (let [cur (merge cur (calculate-no-values plan cycles vars cur))]
+    (merge cur (calculate-values plan cur))))
 
 
 (defn apply-add-buy [plan cycles vars adds buys]
@@ -26,7 +35,7 @@
                 (add-deltas adds)
                 (add-deltas buys)
                 (merge (aggregate plan cycles vars buys)))]
-    (merge cur (calculate plan cycles cur))))
+    (merge cur (calculate plan cycles vars cur))))
 
 (defn subscribe [plan cycles vars])
 
