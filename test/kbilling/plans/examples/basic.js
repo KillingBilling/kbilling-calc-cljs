@@ -8,16 +8,16 @@ var min = function(x, y) { return x.comparedTo(y) < 0 ? x : y };
 
 module.exports = {
 
-  cycles: {
+  $cycles: {
     $subscription: {
-      $begin: ['monthly']
+      $begin: ['monthly', 'monthly']
     },
     monthly: {
       $duration: "1 month",
       coverage: {
         sum: {
-          aggr: function(x, y) { return new BigNumber(x).plus(y) },
-          init: function() { return 0 }
+          $aggr: function(x, y) { return new BigNumber(x).plus(y) },
+          $init: function() { return 0 }
         }
       },
       rub: {
@@ -26,11 +26,11 @@ module.exports = {
     }
   },
 
-  values: {
+  $values: {
     rubOrCost: function(rub, monthly$rub$$cost) { return rub > monthly$rub$$cost ? rub : monthly$rub$$cost }
   },
 
-  notifications: {
+  $notifications: {
     rubBelow0: function(rub) { return new BigNumber(rub).lt(0) }
   }
 

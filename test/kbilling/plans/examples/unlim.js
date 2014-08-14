@@ -6,7 +6,7 @@ var price = new BigNumber(5000);
 
 module.exports = {
 
-  cycles: {
+  $cycles: {
     $subscription: {
       $begin: ['monthly']
     },
@@ -18,7 +18,7 @@ module.exports = {
     }
   },
 
-  notifications: {
+  $notifications: {
     rubBelow0: function(rub) { return new BigNumber(rub).lt(0) }
   }
 
