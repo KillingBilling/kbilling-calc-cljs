@@ -8,14 +8,18 @@
 
 (def BigNumber (js/require "bignumber.js"))
 
+(defn =v [m1 m2]
+  (let [str-v (fn [[k v]] [k (str v)])]
+    (= (map str-v m1) (map str-v m2))))
+
 (deftest big-number-construction
-  (is (= {:coverage "200"
-          :rub      "60"}
-         {:coverage (str (BigNumber. 200))
-          :rub      (str (.times (BigNumber. 200) (BigNumber. 0.3)))})))
+  (is (=v {:coverage 200
+           :rub      60}
+          {:coverage (BigNumber. 200)
+           :rub      (.times (BigNumber. 200) (BigNumber. 0.3))})))
 
 (def basic-plan (p/load-plan "test/kbilling/plans/examples/basic"))
 
 (deftest aggregate
-  (is (= {"monthly$coverage$sum" "200"}
-         (tf/aggregate basic-plan #{"monthly"} {} {"coverage" 200}))))
+  (is (=v {"monthly$coverage$sum" 200}
+          (tf/aggregate basic-plan #{"monthly"} {} {"coverage" 200}))))

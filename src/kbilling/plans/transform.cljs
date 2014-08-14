@@ -3,7 +3,7 @@
 (defn $ [a & others] (apply str a (mapcat (fn [s] [\$ s]) others)))
 
 
-(defn or-init [agg vars k] 0)                               ;TODO incomplete!!!
+(defn or-init [init v] (if v v (init)))
 
 
 (defn add-deltas [vars deltas]
@@ -11,12 +11,11 @@
 
 
 (defn aggregate [plan cycles vars buys]
-  (apply hash-map
-         (for [[ck c] (plan "cycles") :when (or (= ck "$subscription") (contains? cycles ck))
-               [acck acc] c :when (contains? buys acck)
-               [aggk agg] acc
-               :let [k ($ ck acck aggk)]
-               _ [k ((agg "aggr") (or-init agg vars k) (buys acck))]] _)))
+  (into {} (for [[ck c] (plan "cycles") :when (or (= ck "$subscription") (contains? cycles ck))
+                 [acck acc] c :when (contains? buys acck)
+                 [aggk agg] acc
+                 :let [k ($ ck acck aggk)]]
+             [k ((agg "aggr") (or-init (agg "init") (vars k)) (buys acck))])))
 
 
 (defn calculate [plan cycles cur])
