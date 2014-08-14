@@ -22,7 +22,7 @@
   (into {} (for [[ck c] (plan :$cycles) :when (or (= ck :$subscription) (contains? cycles ck))
                  [acck acc] c :let [cost (acc :$cost)] :when cost
                  :let [cost-acck ($ ck acck :$cost)]]
-             '???)))
+             [cost-acck 0])))                                ;FIXME incomplete!!!
 
 (defn calculate-values [plan cur])
 
