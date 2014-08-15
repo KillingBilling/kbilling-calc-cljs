@@ -4,6 +4,7 @@
 
 
 (defn or-init [init v] (if v v (init)))
+(defn or0 [v] (if v v 0))
 
 
 (defn add-deltas [vars deltas]
@@ -11,23 +12,22 @@
 
 
 (defn aggregate [plan cycles vars buys]
-  (into {} (for [[ck c] (plan :$cycles) :when (or (= ck :$subscription) (contains? cycles ck))
+  (into {} (for [[ck c] (:$cycles plan) :when (or (= ck :$subscription) (contains? cycles ck))
                  [acck acc] c :when (contains? buys acck)
                  [aggk agg] acc
                  :let [k ($ ck acck aggk)]]
-             [k ((agg :$aggr) (or-init (agg :$init) (vars k)) (buys acck))])))
+             [k ((:$aggr agg) (or-init (:$init agg) (vars k)) (buys acck))])))
 
 
-(defn calculate-no-values [plan cycles vars cur]
-  (into {} (for [[ck c] (plan :$cycles) :when (or (= ck :$subscription) (contains? cycles ck))
-                 [acck acc] c :let [cost (acc :$cost)] :when cost
-                 :let [cost-acck ($ ck acck :$cost)]]
-             [cost-acck 0])))                                ;FIXME incomplete!!!
+(defn calculate-costs [plan cycles cur]
+  (into {} (for [[ck c] (:$cycles plan) :when (or (= ck :$subscription) (contains? cycles ck))
+                 [acck acc] c :let [cost-fn (:$cost acc)] :when cost-fn]
+             [($ ck acck :$cost) (cost-fn cur)])))
 
 (defn calculate-values [plan cur])
 
-(defn calculate [plan cycles vars cur]
-  (let [cur (merge cur (calculate-no-values plan cycles vars cur))]
+(defn calculate [plan cycles vars cur]                      ;FIXME incomplete!!!
+  (let [cur (merge cur (calculate-costs plan cycles cur))]
     (merge cur (calculate-values plan cur))))
 
 

@@ -24,10 +24,14 @@
 
 (def basic-plan (p/load-plan "test/kbilling/plans/examples/basic"))
 
-(deftest aggregate
+(deftest aggregate-test
   (is (=v {:monthly$coverage$sum 200}
           (tf/aggregate basic-plan #{:monthly} {} {:coverage 200}))))
 
-#_(deftest calculate
+(deftest calculate-costs-test
+  (is (=v {:monthly$rub$$cost 60}
+          (tf/calculate-costs basic-plan #{:monthly} {:coverage 200, :monthly$coverage$sum 200}))))
+
+#_(deftest calculate-test
   (is (=v {:monthly$rub$$cost 60, :rub -60, :rubOrCost 60}
           (tf/calculate basic-plan #{:monthly} {} {:coverage 200, :monthly$coverage$sum 200}))))
