@@ -4,18 +4,17 @@
 (def reflect-fn (js/require "function-to-string"))
 
 (defn load-cost-fn [f path]
-  (let [params (vec (map keyword (.-params (reflect-fn f))))]     ;TODO prefix local params with cycle key
-    (fn [vars] (apply f (map #(vars %) params)))))                ;TODO test
+  (let [params (vec (map keyword (.-params (reflect-fn f))))] ;TODO prefix local params with cycle key
+    (fn [vars] (apply f (map #(vars %) params)))))          ;TODO test
 
-(defn load-map [x path]
+(defn load-v [x path]
   (cond
     (map? x)
-    (into {}
-          (for [[k v] x]
-            [k (case k
-                 :$begin (set (map keyword v))
-                 :$cost (load-cost-fn v path)
-                 (load-map v (conj path k)))]))
+    (into {} (for [[k v] x]
+               [k (case k
+                    :$begin (set (map keyword v))
+                    :$cost (load-cost-fn v path)
+                    (load-v v (conj path k)))]))
 
     :else x))
 
@@ -23,4 +22,4 @@
   (js/require (str (.cwd js/process) "/" path)))
 
 (def load-plan
-  (memoize #(load-map (js->clj (root-require %) :keywordize-keys true) [])))
+  (memoize #(load-v (js->clj (root-require %) :keywordize-keys true) [])))
