@@ -10,10 +10,6 @@
 (defn or0 [v] (if v v 0))
 
 
-(defn add-deltas [vars deltas]
-  (merge-with + vars deltas))
-
-
 (defn aggregate [plan cycles vars buys]
   (into {} (for [[ck c] (:$cycles plan) :when (or (= ck :$subscription) (contains? cycles ck))
                  [acck acc] c :when (contains? buys acck)
@@ -27,8 +23,10 @@
                  [acck acc] c :let [cost-fn (:$cost acc)] :when cost-fn]
              [(_concat ck acck :$cost) (cost-fn cur)])))
 
-(defn +bign [x y] (.plus (BigNumber x) (BigNumber y)))
-(defn -bign [x y] (.minus (BigNumber x) (BigNumber y)))
+(defn +bign [x y] (.plus (BigNumber (or0 x)) (BigNumber (or0 y))))
+(defn -bign [x y] (.minus (BigNumber (or0 x)) (BigNumber (or0 y))))
+
+(defn add-deltas [vars deltas] (merge-with +bign vars deltas))
 
 (defn apply-costs [vars costs]
   (let [cost-deltas (for [[costk costv] costs
@@ -39,13 +37,14 @@
     (into {} (->> cost-deltas
                   (group-by #(% 0))
                   (map (fn [[acck costs]] [acck (->> costs (map #(% 1)) (reduce +bign 0))]))
-                  (map (fn [[acck delta]] [acck (-bign (or0 (acck vars)) delta)]))))))
+                  (map (fn [[acck delta]] [acck (-bign (acck vars) delta)]))))))
 
 (defn calculate-values [plan cur])
 
 (defn calculate [plan cycles vars cur]                      ;FIXME incomplete!!!
-  (let [cur (merge cur (calculate-costs plan cycles cur))]
-    (merge cur (calculate-values plan cur))))
+  (let [costs  (calculate-costs plan cycles cur)
+        calculated (merge costs (apply-costs vars costs))]
+    calculated))
 
 
 (defn apply-add-buy [plan cycles vars adds buys]

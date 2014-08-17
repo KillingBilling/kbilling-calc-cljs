@@ -37,6 +37,6 @@
           (tf/apply-costs {:rub 350, :monthly_rub_$cost 10, :$subscription_rub_$cost 2700}
                           {:monthly_rub_$cost 60, :$subscription_rub_$cost 2800}))))
 
-#_(deftest calculate-test
-  (is (=v {:monthly_rub_$cost 60, :rub -60, :rubOrCost 60}
+(deftest calculate-test
+  (is (=v {:$subscription_rub_$cost 2800, :monthly_rub_$cost 60, :rub -2860}
           (tf/calculate basic-plan #{:monthly} {} {:coverage 200, :monthly_coverage_sum 200}))))
