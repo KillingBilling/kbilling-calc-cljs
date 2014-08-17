@@ -1,6 +1,6 @@
 (ns kbilling.plans.transform)
 
-(def _concat (memoize (fn [a & others] (keyword (apply str (name a) (mapcat (fn [s] [\_ (name s)]) others))))))
+(def _concat (memoize (fn [a & others] (keyword (apply str (name a) (for [s others, _ [\_ (name s)]] _))))))
 
 
 (defn or-init [init v] (if v v (init)))

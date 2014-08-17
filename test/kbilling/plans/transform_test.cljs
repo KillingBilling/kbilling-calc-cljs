@@ -12,7 +12,7 @@
   (let [str-v (fn [[k v]] [k (str v)])]
     (= (into {} (map str-v m1)) (into {} (map str-v m2)))))
 
-(deftest _$-keyword
+(deftest _concat-test
   (is (= :a_bb_$cost
          (tf/_concat :a :bb :$cost))))
 
