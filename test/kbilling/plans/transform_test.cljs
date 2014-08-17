@@ -10,7 +10,7 @@
 
 (defn =v [m1 m2]
   (let [str-v (fn [[k v]] [k (str v)])]
-    (= (map str-v m1) (map str-v m2))))
+    (= (into {} (map str-v m1)) (into {} (map str-v m2)))))
 
 (deftest $-keyword
   (is (= :a$bb$$cost
@@ -29,7 +29,7 @@
           (tf/aggregate basic-plan #{:monthly} {} {:coverage 200}))))
 
 (deftest calculate-costs-test
-  (is (=v {:monthly$rub$$cost 60}
+  (is (=v {:monthly$rub$$cost 60, :$subscription$rub$$cost 2800}
           (tf/calculate-costs basic-plan #{:monthly} {:coverage 200, :monthly$coverage$sum 200}))))
 
 #_(deftest calculate-test

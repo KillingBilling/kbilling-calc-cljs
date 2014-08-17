@@ -10,7 +10,10 @@ module.exports = {
 
   $cycles: {
     $subscription: {
-      $begin: ['monthly', 'monthly']
+      $begin: ['monthly', 'monthly'],
+      rub: {
+        $cost: function() { return 2800 }
+      }
     },
     monthly: {
       $duration: "1 month",
