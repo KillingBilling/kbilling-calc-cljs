@@ -39,4 +39,4 @@
 
 (deftest calculate-test
   (is (=v {:$subscription_rub_$cost 2800, :monthly_rub_$cost 60, :rub -2860}
-          (tf/calculate basic-plan #{:monthly} {} {:coverage 200, :monthly_coverage_sum 200}))))
+          (tf/calculate-no-values basic-plan #{:monthly} {} {:coverage 200, :monthly_coverage_sum 200}))))
