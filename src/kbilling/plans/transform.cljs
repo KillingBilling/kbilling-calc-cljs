@@ -1,5 +1,8 @@
 (ns kbilling.plans.transform)
 
+(def BigNumber (js/require "bignumber.js"))
+
+
 (def _concat (memoize (fn [a & others] (keyword (apply str (name a) (for [s others, _ [\_ (name s)]] _))))))
 
 
@@ -23,6 +26,20 @@
   (into {} (for [[ck c] (:$cycles plan) :when (or (= ck :$subscription) (contains? cycles ck))
                  [acck acc] c :let [cost-fn (:$cost acc)] :when cost-fn]
              [(_concat ck acck :$cost) (cost-fn cur)])))
+
+(defn +bign [x y] (.plus (BigNumber x) (BigNumber y)))
+(defn -bign [x y] (.minus (BigNumber x) (BigNumber y)))
+
+(defn apply-costs [vars costs]
+  (let [cost-deltas (for [[costk costv] costs
+                          :let [costv-prev (or0 (costk vars))
+                                cost-delta (.minus (BigNumber costv) (BigNumber costv-prev))
+                                acck (keyword ((clojure.string/split costk #"_") 1))]]
+                      [acck cost-delta])]
+    (into {} (->> cost-deltas
+                  (group-by #(% 0))
+                  (map (fn [[acck costs]] [acck (->> costs (map #(% 1)) (reduce +bign 0))]))
+                  (map (fn [[acck delta]] [acck (-bign (or0 (acck vars)) delta)]))))))
 
 (defn calculate-values [plan cur])
 
