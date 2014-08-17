@@ -12,9 +12,9 @@
   (let [str-v (fn [[k v]] [k (str v)])]
     (= (into {} (map str-v m1)) (into {} (map str-v m2)))))
 
-(deftest $-keyword
-  (is (= :a$bb$$cost
-         (tf/$ :a :bb :$cost))))
+(deftest _$-keyword
+  (is (= :a_bb_$cost
+         (tf/_concat :a :bb :$cost))))
 
 (deftest big-number-construction
   (is (=v {:coverage 200
@@ -25,13 +25,13 @@
 (def basic-plan (p/load-plan "test/kbilling/plans/examples/basic"))
 
 (deftest aggregate-test
-  (is (=v {:monthly$coverage$sum 200}
+  (is (=v {:monthly_coverage_sum 200}
           (tf/aggregate basic-plan #{:monthly} {} {:coverage 200}))))
 
 (deftest calculate-costs-test
-  (is (=v {:monthly$rub$$cost 60, :$subscription$rub$$cost 2800}
-          (tf/calculate-costs basic-plan #{:monthly} {:coverage 200, :monthly$coverage$sum 200}))))
+  (is (=v {:monthly_rub_$cost 60, :$subscription_rub_$cost 2800}
+          (tf/calculate-costs basic-plan #{:monthly} {:coverage 200, :monthly_coverage_sum 200}))))
 
 #_(deftest calculate-test
-  (is (=v {:monthly$rub$$cost 60, :rub -60, :rubOrCost 60}
-          (tf/calculate basic-plan #{:monthly} {} {:coverage 200, :monthly$coverage$sum 200}))))
+  (is (=v {:monthly_rub_$cost 60, :rub -60, :rubOrCost 60}
+          (tf/calculate basic-plan #{:monthly} {} {:coverage 200, :monthly_coverage_sum 200}))))

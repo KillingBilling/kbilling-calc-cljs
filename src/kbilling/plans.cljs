@@ -3,10 +3,10 @@
 (def reflect-fn (js/require "function-to-string"))
 
 (defn global-var-name [path var-name]
-  (let [parts (clojure.string/split var-name #"\$(?!cost)")
+  (let [parts (clojure.string/split var-name #"_")
         cur-cycle (case (path 0) :$cycles (name (path 1)) nil)]
     (if (and cur-cycle (= 2 (count parts)))
-      (str cur-cycle "$" var-name)
+      (str cur-cycle "_" var-name)
       var-name)))
 
 (defn load-cost-fn [f path]

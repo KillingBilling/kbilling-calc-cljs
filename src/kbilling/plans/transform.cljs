@@ -1,6 +1,6 @@
 (ns kbilling.plans.transform)
 
-(def $ (memoize (fn [a & others] (keyword (apply str (name a) (mapcat (fn [s] [\$ (name s)]) others))))))
+(def _concat (memoize (fn [a & others] (keyword (apply str (name a) (mapcat (fn [s] [\_ (name s)]) others))))))
 
 
 (defn or-init [init v] (if v v (init)))
@@ -15,14 +15,14 @@
   (into {} (for [[ck c] (:$cycles plan) :when (or (= ck :$subscription) (contains? cycles ck))
                  [acck acc] c :when (contains? buys acck)
                  [aggk agg] acc
-                 :let [k ($ ck acck aggk)]]
+                 :let [k (_concat ck acck aggk)]]
              [k ((:$aggr agg) (or-init (:$init agg) (vars k)) (buys acck))])))
 
 
 (defn calculate-costs [plan cycles cur]
   (into {} (for [[ck c] (:$cycles plan) :when (or (= ck :$subscription) (contains? cycles ck))
                  [acck acc] c :let [cost-fn (:$cost acc)] :when cost-fn]
-             [($ ck acck :$cost) (cost-fn cur)])))
+             [(_concat ck acck :$cost) (cost-fn cur)])))
 
 (defn calculate-values [plan cur])
 

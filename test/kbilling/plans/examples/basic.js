@@ -24,13 +24,13 @@ module.exports = {
         }
       },
       rub: {
-        $cost: function(coverage$sum) { return min(new BigNumber(coverage$sum).times(contactPrice), maxPrice) }
+        $cost: function(coverage_sum) { return min(new BigNumber(coverage_sum).times(contactPrice), maxPrice) }
       }
     }
   },
 
   $values: {
-    rubOrCost: function(rub, monthly$rub$$cost) { return rub > monthly$rub$$cost ? rub : monthly$rub$$cost }
+    rubOrCost: function(rub, monthly_rub_$cost) { return rub > monthly_rub_$cost ? rub : monthly_rub_$cost }
   },
 
   $notifications: {
