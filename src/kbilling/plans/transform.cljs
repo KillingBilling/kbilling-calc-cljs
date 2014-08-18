@@ -46,6 +46,13 @@
     (merge cur (calculate-values plan cur))))
 
 
+(defn transitive-image [f z x]
+  (if (contains? z x) z (reduce #(transitive-image f %1 %2) (conj z x) (f x))))
+
+(defn transitive-billing-cycles [plan ck]
+  (transitive-image #(or (-> plan :$cycles % :$begin) #{}) #{} ck))
+
+
 (defn apply-add-buy [plan cycles vars adds buys]
   (let [vars (merge-with +bign vars adds buys)
         cur (merge vars (aggregate plan cycles vars buys))]

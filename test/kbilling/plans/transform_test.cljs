@@ -63,3 +63,10 @@
                             {:rub 1000, :$subscription_rub_$cost 2800}
                             {:rub 3000}
                             {:coverage 200}))))
+
+
+(deftest transitive-billing-cycles-test
+  (is (= #{:$subscription :monthly}
+         (tf/transitive-billing-cycles basic-plan :$subscription)))
+  (is (= #{:monthly}
+         (tf/transitive-billing-cycles basic-plan :monthly))))
