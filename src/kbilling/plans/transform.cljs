@@ -75,11 +75,12 @@
         cur (merge vars (aggregate plan cycles vars buys))]
     (merge cur (calculate plan cycles vars cur))))
 
-(defn subscribe [plan vars])
-
 (defn cycle-begin [plan cycle-k vars]
   (let [cycles (transitive-billing-cycles plan cycle-k)
         initial-vars (init-vars plan cycles vars)]
     (merge initial-vars (calculate plan cycles initial-vars initial-vars))))
+
+(defn subscribe [plan vars] (cycle-begin plan :$subscription vars))
+
 
 (defn transform [inobj])
