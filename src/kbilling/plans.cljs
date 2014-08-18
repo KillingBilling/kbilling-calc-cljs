@@ -23,6 +23,7 @@
                     (= k :$begin) (set (map keyword v))
                     (= k :$cost) (load-fn v path)
                     (= path [:$values]) (load-fn v path)
+                    (= path [:$notifications]) (load-fn v path)
                     :else (load-v v (conj path k)))]))
 
     :else x))

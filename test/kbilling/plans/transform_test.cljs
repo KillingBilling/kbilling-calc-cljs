@@ -106,3 +106,11 @@
            :$subscription_rub_$cost 2800
            :monthly_rub_$cost       0
            :rubOrCost               0})))
+
+(deftest notifications-test
+  (is (= (tf/notifications basic-plan {:rub 100})
+         {:rubBelow0 false}))
+  (is (= (tf/notifications basic-plan {:rub 0})
+         {:rubBelow0 false}))
+  (is (= (tf/notifications basic-plan {:rub -10})
+         {:rubBelow0 true})))

@@ -82,5 +82,8 @@
 
 (defn subscribe [plan vars] (cycle-begin plan :$subscription vars))
 
+(defn notifications [plan vars]
+  (into {} (for [[nk n-fn] (:$notifications plan)] [nk (n-fn vars)])))
+
 
 (defn transform [inobj])
