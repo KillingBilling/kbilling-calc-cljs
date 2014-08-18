@@ -12,15 +12,16 @@
   (let [str-v (fn [[k v]] [k (str v)])]
     (= (into {} (map str-v m1)) (into {} (map str-v m2)))))
 
-(deftest _concat-test
+
+(deftest k_-test
   (is (= :a_bb_$cost
-         (tf/_concat :a :bb :$cost))))
+         (tf/k_ :a :bb :$cost))))
 
 (deftest big-number-construction
   (is (=v {:coverage 200
            :rub      60}
-          {:coverage (BigNumber. 200)
-           :rub      (.times (BigNumber. 200) (BigNumber. 0.3))})))
+          {:coverage (BigNumber 200)
+           :rub      (.times (BigNumber 200) (BigNumber 0.3))})))
 
 (def basic-plan (p/load-plan "test/kbilling/plans/examples/basic"))
 
