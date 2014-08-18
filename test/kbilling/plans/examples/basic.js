@@ -30,7 +30,9 @@ module.exports = {
   },
 
   $values: {
-    rubOrCost: function(rub, monthly_rub_$cost) { return rub > monthly_rub_$cost ? rub : monthly_rub_$cost }
+    rubOrCost: function(rub, monthly_rub_$cost) {
+      return new BigNumber(rub).greaterThan(monthly_rub_$cost) ? rub : monthly_rub_$cost
+    }
   },
 
   $notifications: {

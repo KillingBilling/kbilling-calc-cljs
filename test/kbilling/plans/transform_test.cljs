@@ -20,8 +20,8 @@
 (deftest big-number-construction
   (is (=v {:coverage 200
            :rub      60}
-          {:coverage (BigNumber 200)
-           :rub      (.times (BigNumber 200) (BigNumber 0.3))})))
+          {:coverage (BigNumber. 200)
+           :rub      (.times (BigNumber. 200) (BigNumber. 0.3))})))
 
 (def basic-plan (p/load-plan "test/kbilling/plans/examples/basic"))
 
@@ -39,7 +39,27 @@
                           {:monthly_rub_$cost 60, :$subscription_rub_$cost 2800}))))
 
 (deftest calculate-test
+
   (is (=v {:$subscription_rub_$cost 2800, :monthly_rub_$cost 60, :rub -2860}
           (tf/calculate-no-values basic-plan #{:monthly} {} {:coverage 200, :monthly_coverage_sum 200})))
-  (is (=v {:$subscription_rub_$cost 2800, :monthly_rub_$cost 60, :rub -2860, :rubOrCost 60}
-          (tf/calculate basic-plan #{:monthly} {} {:coverage 200, :monthly_coverage_sum 200}))))
+
+  (is (=v {:$subscription_rub_$cost 2800, :monthly_rub_$cost 60, :rub -60, :rubOrCost 60}
+          (tf/calculate basic-plan #{:monthly}
+                        {:$subscription_rub_$cost 2800}
+                        {:coverage 200, :monthly_coverage_sum 200}))))
+
+(deftest merge-with+bign-test
+  (is (=v {:rub 4000, :$subscription_rub_$cost 2800, :coverage 200}
+          (merge-with tf/+bign {:rub 1000, :$subscription_rub_$cost 2800} {:rub 3000} {:coverage 200}))))
+
+(deftest apply-add-buy-test
+  (is (=v {:rub                     3940
+           :coverage                200
+           :monthly_coverage_sum    200
+           :$subscription_rub_$cost 2800
+           :monthly_rub_$cost       60
+           :rubOrCost               3940}
+          (tf/apply-add-buy basic-plan #{:monthly}
+                            {:rub 1000, :$subscription_rub_$cost 2800}
+                            {:rub 3000}
+                            {:coverage 200}))))

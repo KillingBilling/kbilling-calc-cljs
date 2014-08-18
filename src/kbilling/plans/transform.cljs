@@ -19,10 +19,8 @@
                  [acck acc] c :let [cost-fn (:$cost acc)] :when cost-fn]
              [(k_ ck acck :$cost) (cost-fn cur)])))
 
-(defn +bign [x y] (.plus (BigNumber (or x 0)) (BigNumber (or y 0))))
-(defn -bign [x y] (.minus (BigNumber (or x 0)) (BigNumber (or y 0))))
-
-(defn add-deltas [vars deltas] (merge-with +bign vars deltas))
+(defn +bign [x y] (.plus (BigNumber. (or x 0)) (BigNumber. (or y 0))))
+(defn -bign [x y] (.minus (BigNumber. (or x 0)) (BigNumber. (or y 0))))
 
 (defn apply-costs [vars costs]
   (let [cost-deltas (for [[costk costv] costs
@@ -49,11 +47,10 @@
 
 
 (defn apply-add-buy [plan cycles vars adds buys]
-  (let [cur (-> vars
-                (add-deltas adds)
-                (add-deltas buys)
-                (merge (aggregate plan cycles vars buys)))]
+  (let [vars (merge-with +bign vars adds buys)
+        cur (merge vars (aggregate plan cycles vars buys))]
     (merge cur (calculate plan cycles vars cur))))
+
 
 (defn subscribe [plan cycles vars])
 
