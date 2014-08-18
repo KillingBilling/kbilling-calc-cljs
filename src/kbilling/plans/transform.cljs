@@ -39,15 +39,16 @@
                   (map (fn [[acck costs]] [acck (->> costs (map #(% 1)) (reduce +bign 0))]))
                   (map (fn [[acck delta]] [acck (-bign (acck vars) delta)]))))))
 
-(defn calculate-values [plan cur] {})
+(defn calculate-values [plan cur]
+  (into {} (for [[val-k val-fn] (or (:$values plan) [])]
+             [val-k (val-fn cur)])))
 
 (defn calculate-no-values [plan cycles vars cur]
-  (let [costs  (calculate-costs plan cycles cur)
-        calculated (merge costs (apply-costs vars costs))]
-    (merge calculated (calculate-values plan cur))))
+  (let [costs  (calculate-costs plan cycles cur)]
+    (merge costs (apply-costs vars costs))))
 
 (defn calculate [plan cycles vars cur]
-  (let [cur (calculate-no-values plan cycles vars cur)]
+  (let [cur (merge vars (calculate-no-values plan cycles vars cur))]
     (merge cur (calculate-values plan cur))))
 
 
