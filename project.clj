@@ -21,7 +21,7 @@
                                               :output-to     "target/main.js"
                                               :optimizations :advanced
                                               :pretty-print  true}}
-                              {:source-paths ["test"]
+                              {:source-paths ["src" "test"]
                                :compiler     {:target        :nodejs
                                               :output-to     "target/test.js"
                                               :optimizations :simple
