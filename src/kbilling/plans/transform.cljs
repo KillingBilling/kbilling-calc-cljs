@@ -38,7 +38,7 @@
              [val-k (val-fn cur)])))
 
 (defn calculate-no-values [plan cycles vars cur]
-  (let [costs  (calculate-costs plan cycles cur)]
+  (let [costs (calculate-costs plan cycles cur)]
     (merge costs (apply-costs vars costs))))
 
 (defn calculate [plan cycles vars cur]
@@ -51,6 +51,23 @@
 
 (defn transitive-billing-cycles [plan ck]
   (transitive-image #(or (-> plan :$cycles % :$begin) #{}) #{} ck))
+
+(def acc-keys
+  (memoize #(into #{} (for [[_ c] (:$cycles %)
+                            [acck _] c :when (not (contains? #{:$begin :$duration} acck))]
+                        acck))))
+
+(defn init-vars [plan cycles vars]
+  (let [acc-vars (into {} (for [acck (acc-keys plan)]
+                            [acck (or (acck vars) 0)]))
+        cost-vars (into {} (for [[ck c] (:$cycles plan) :when (contains? cycles ck)
+                                 [acck acc] c :when (and (not (contains? #{:$begin :$duration} acck)) (:$cost acc))]
+                             [(k_ ck acck :$cost) 0]))
+        agg-vars (into {} (for [[ck c] (:$cycles plan) :when (contains? cycles ck)
+                                [acck acc] c :when (not (contains? #{:$begin :$duration} acck))
+                                [aggk agg] acc :let [agg-init (:$init agg)] :when agg-init]
+                            [(k_ ck acck aggk) (agg-init)]))]
+    (merge acc-vars cost-vars agg-vars)))
 
 
 (defn apply-add-buy [plan cycles vars adds buys]

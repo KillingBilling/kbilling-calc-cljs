@@ -70,3 +70,24 @@
          (tf/transitive-billing-cycles basic-plan :$subscription)))
   (is (= #{:monthly}
          (tf/transitive-billing-cycles basic-plan :monthly))))
+
+(deftest acc-keys-test
+  (is (= #{:rub :coverage}
+         (tf/acc-keys basic-plan))))
+
+(deftest init-vars-test
+  (is (=v {:rub 0
+           :coverage 0
+           :monthly_coverage_sum 0
+           :$subscription_rub_$cost 0
+           :monthly_rub_$cost 0}
+          (tf/init-vars basic-plan #{:$subscription :monthly} {}))))
+
+#_(deftest init-vars-test
+  (is (=v {:rub -2800
+           :coverage 0
+           :monthly_coverage_sum 0
+           :$subscription_rub_$cost 2800
+           :monthly_rub_$cost 0
+           :rubOrCost 0}
+          (tf/init-vars basic-plan #{:$subscription :monthly} {}))))
