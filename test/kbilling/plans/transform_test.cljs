@@ -14,89 +14,95 @@
 
 
 (deftest k_-test
-  (is (= :a_bb_$cost
-         (tf/k_ :a :bb :$cost))))
+  (is (= (tf/k_ :a :bb :$cost)
+         :a_bb_$cost)))
 
 (deftest big-number-construction
-  (is (=v {:coverage 200
-           :rub      60}
-          {:coverage (BigNumber. 200)
-           :rub      (.times (BigNumber. 200) (BigNumber. 0.3))})))
+  (is (=v {:coverage (BigNumber. 200)
+           :rub      (.times (BigNumber. 200) (BigNumber. 0.3))}
+          {:coverage 200
+           :rub      60})))
 
 (def basic-plan (p/load-plan "test/kbilling/plans/examples/basic"))
 
 (deftest aggregate-test
-  (is (=v {:monthly_coverage_sum 200}
-          (tf/aggregate basic-plan #{:monthly} {} {:coverage 200}))))
+  (is (=v (tf/aggregate basic-plan #{:monthly} {} {:coverage 200})
+          {:monthly_coverage_sum 200})))
 
 (deftest calculate-costs-test
-  (is (=v {:monthly_rub_$cost 60, :$subscription_rub_$cost 2800}
-          (tf/calculate-costs basic-plan #{:monthly} {:coverage 200, :monthly_coverage_sum 200}))))
+  (is (=v (tf/calculate-costs basic-plan #{:monthly} {:coverage 200, :monthly_coverage_sum 200})
+          {:monthly_rub_$cost 60, :$subscription_rub_$cost 2800})))
 
 (deftest apply-costs-test
-  (is (=v {:rub 200}
-          (tf/apply-costs {:rub 350, :monthly_rub_$cost 10, :$subscription_rub_$cost 2700}
-                          {:monthly_rub_$cost 60, :$subscription_rub_$cost 2800}))))
+  (is (=v (tf/apply-costs {:rub 350, :monthly_rub_$cost 10, :$subscription_rub_$cost 2700}
+                          {:monthly_rub_$cost 60, :$subscription_rub_$cost 2800})
+          {:rub 200})))
 
 (deftest calculate-test
+  (is (=v (tf/calculate-no-values basic-plan #{:monthly} {} {:coverage 200, :monthly_coverage_sum 200})
+          {:$subscription_rub_$cost 2800, :monthly_rub_$cost 60, :rub -2860}))
 
-  (is (=v {:$subscription_rub_$cost 2800, :monthly_rub_$cost 60, :rub -2860}
-          (tf/calculate-no-values basic-plan #{:monthly} {} {:coverage 200, :monthly_coverage_sum 200})))
-
-  (is (=v {:$subscription_rub_$cost 2800, :monthly_rub_$cost 60, :rub -60, :rubOrCost 60}
-          (tf/calculate basic-plan #{:monthly}
+  (is (=v (tf/calculate basic-plan #{:monthly}
                         {:$subscription_rub_$cost 2800}
-                        {:coverage 200, :monthly_coverage_sum 200}))))
+                        {:coverage 200, :monthly_coverage_sum 200})
+          {:$subscription_rub_$cost 2800, :monthly_rub_$cost 60, :rub -60, :rubOrCost 60})))
 
 (deftest merge-with+bign-test
-  (is (=v {:rub 4000, :$subscription_rub_$cost 2800, :coverage 200}
-          (merge-with tf/+bign {:rub 1000, :$subscription_rub_$cost 2800} {:rub 3000} {:coverage 200}))))
+  (is (=v (merge-with tf/+bign {:rub 1000, :$subscription_rub_$cost 2800} {:rub 3000} {:coverage 200})
+          {:rub 4000, :$subscription_rub_$cost 2800, :coverage 200})))
 
 (deftest apply-add-buy-test
-  (is (=v {:rub                     3940
+  (is (=v (tf/apply-add-buy basic-plan #{:monthly}
+                            {:rub 1000, :$subscription_rub_$cost 2800}
+                            {:rub 3000}
+                            {:coverage 200})
+          {:rub                     3940
            :coverage                200
            :monthly_coverage_sum    200
            :$subscription_rub_$cost 2800
            :monthly_rub_$cost       60
-           :rubOrCost               3940}
-          (tf/apply-add-buy basic-plan #{:monthly}
-                            {:rub 1000, :$subscription_rub_$cost 2800}
-                            {:rub 3000}
-                            {:coverage 200}))))
+           :rubOrCost               3940})))
 
 
 (deftest transitive-billing-cycles-test
-  (is (= #{:$subscription :monthly}
-         (tf/transitive-billing-cycles basic-plan :$subscription)))
-  (is (= #{:monthly}
-         (tf/transitive-billing-cycles basic-plan :monthly))))
+  (is (= (tf/transitive-billing-cycles basic-plan :$subscription)
+         #{:$subscription :monthly}))
+  (is (= (tf/transitive-billing-cycles basic-plan :monthly)
+         #{:monthly})))
 
 (deftest acc-keys-test
   (is (= #{:rub :coverage}
          (tf/acc-keys basic-plan))))
 
 (deftest init-vars-test
-  (is (=v {:rub                     0
+  (is (=v (tf/init-vars basic-plan #{:$subscription :monthly} {})
+          {:rub                     0
            :coverage                0
            :monthly_coverage_sum    0
-           :$subscription_rub_$cost 0
-           :monthly_rub_$cost       0}
-          (tf/init-vars basic-plan #{:$subscription :monthly} {}))))
+           :monthly_rub_$cost       0
+           :$subscription_rub_$cost 0}))
+
+  (is (=v (tf/init-vars basic-plan #{:monthly} {:rub 1000, :coverage 70000, :$subscription_rub_$cost 2800})
+          {:rub                     1000
+           :coverage                70000
+           :monthly_coverage_sum    0
+           :monthly_rub_$cost       0
+           :$subscription_rub_$cost 2800})))
 
 (deftest cycle-begin-test
-  (is (=v {:rub                     -1800
-           :coverage                0
+  (is (=v (tf/cycle-begin basic-plan :monthly {:rub 1000, :coverage 70000, :$subscription_rub_$cost 2800})
+          {:rub                     1000
+           :coverage                70000
            :monthly_coverage_sum    0
-           :$subscription_rub_$cost 2800
            :monthly_rub_$cost       0
-           :rubOrCost               0}
-          (tf/cycle-begin basic-plan :$subscription {:rub 1000}))))
+           :$subscription_rub_$cost 2800
+           :rubOrCost               1000})))
 
 (deftest subscribe-test
-  (is (=v {:rub                     -2800
+  (is (=v (tf/subscribe basic-plan {})
+          {:rub                     -2800
            :coverage                0
            :monthly_coverage_sum    0
            :$subscription_rub_$cost 2800
            :monthly_rub_$cost       0
-           :rubOrCost               0}
-          (tf/subscribe basic-plan {}))))
+           :rubOrCost               0})))

@@ -58,8 +58,8 @@
                         acck))))
 
 (defn init-vars [plan cycles vars]
-  (let [acc-vars (into {} (for [acck (acc-keys plan)]
-                            [acck (or (acck vars) 0)]))
+  (let [acc-vars (into {} (for [acck (acc-keys plan) :when (not (acck vars))]
+                            [acck 0]))
         cost-vars (into {} (for [[ck c] (:$cycles plan) :when (contains? cycles ck)
                                  [acck acc] c :when (and (not (contains? #{:$begin :$duration} acck)) (:$cost acc))]
                              [(k_ ck acck :$cost) 0]))
@@ -67,7 +67,7 @@
                                 [acck acc] c :when (not (contains? #{:$begin :$duration} acck))
                                 [aggk agg] acc :let [agg-init (:$init agg)] :when agg-init]
                             [(k_ ck acck aggk) (agg-init)]))]
-    (merge acc-vars cost-vars agg-vars)))
+    (merge vars acc-vars cost-vars agg-vars)))
 
 
 (defn apply-add-buy [plan cycles vars adds buys]
@@ -77,8 +77,8 @@
 
 (defn cycle-begin [plan cycle-k vars]
   (let [cycles (transitive-billing-cycles plan cycle-k)
-        initial-vars (init-vars plan cycles vars)]
-    (merge initial-vars (calculate plan cycles initial-vars initial-vars))))
+        initialized (init-vars plan cycles vars)]
+    (merge initialized (calculate plan cycles initialized initialized))))
 
 (defn subscribe [plan vars] (cycle-begin plan :$subscription vars))
 
