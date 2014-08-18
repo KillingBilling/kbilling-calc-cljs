@@ -11,7 +11,6 @@
                  [org.clojure/clojurescript "0.0-2311"]]
 
   :node-dependencies [[bignumber.js "^1.4.1"]
-                      [chai "^1.9.1"]
                       [function-to-string "^0.2.0"]]
 
   :hooks [leiningen.cljsbuild]
