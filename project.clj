@@ -11,7 +11,8 @@
                  [org.clojure/clojurescript "0.0-2311"]]
 
   :node-dependencies [[bignumber.js "^1.4.1"]
-                      [function-to-string "^0.2.0"]]
+                      [function-to-string "^0.2.0"]
+                      [split "^0.3.0"]]
 
   :hooks [leiningen.cljsbuild]
 
@@ -19,7 +20,7 @@
               :builds        [{:source-paths ["src"]
                                :compiler     {:target        :nodejs
                                               :output-to     "target/main.js"
-                                              :optimizations :advanced
+                                              :optimizations :simple
                                               :pretty-print  true}}
                               {:source-paths ["src" "test"]
                                :compiler     {:target        :nodejs
