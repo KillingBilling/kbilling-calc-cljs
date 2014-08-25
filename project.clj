@@ -12,21 +12,26 @@
 
   :node-dependencies [[bignumber.js "^1.4.1"]
                       [function-to-string "^0.2.0"]
-                      [split "^0.3.0"]]
+                      [split "^0.3.0"]
+                      [closurecompiler-externs "^1.0.4"]]
 
   :hooks [leiningen.cljsbuild]
 
   :cljsbuild {:test-commands {"unit-tests" ["node" "target/test.js"]}
-              :builds        [{:source-paths ["src"]
-                               :compiler     {:target        :nodejs
-                                              :output-to     "target/main.js"
-                                              :optimizations :simple
-                                              :pretty-print  true}}
-                              {:source-paths ["src" "test"]
-                               :compiler     {:target        :nodejs
-                                              :output-to     "target/test.js"
-                                              :optimizations :simple
-                                              :pretty-print  true}}]}
+              :builds        {:main {:source-paths ["src"]
+                                     :compiler     {:target        :nodejs
+                                                    :output-to     "target/main.js"
+                                                    :output-dir    "target/main"
+                                                    :optimizations :advanced
+                                                    :pretty-print  false
+                                                    :externs       ["node_modules/closurecompiler-externs/process.js"
+                                                                    "node_modules/closurecompiler-externs/stream.js"]}}
+                              :test {:source-paths ["src" "test"]
+                                     :compiler     {:target        :nodejs
+                                                    :output-to     "target/test.js"
+                                                    :output-dir    "target/test"
+                                                    :optimizations :simple
+                                                    :pretty-print  true}}}}
 
   :profiles {:dev {:plugins      [[lein-cljsbuild "1.0.3"]
                                   [lein-npm "0.4.0"]]
