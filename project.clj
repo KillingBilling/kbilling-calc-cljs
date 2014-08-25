@@ -28,7 +28,7 @@
                                                     :externs       ["node_modules/closurecompiler-externs/process.js"
                                                                     "node_modules/closurecompiler-externs/stream.js"]}}
                               :test {:source-paths   ["src" "test"]
-                                     :notify-command ["./run-tests.sh"]
+                                     :notify-command ["node" "./run-tests.js"]
                                      :compiler       {:target        :nodejs
                                                       :output-to     "target/test.js"
                                                       :output-dir    "target/test"

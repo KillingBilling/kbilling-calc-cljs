@@ -5,4 +5,4 @@
             [kbilling.plans.transform-test]))
 
 (node/enable-util-print!)
-(set! *main-cli-fn* t/run-all-tests)
+(set! *main-cli-fn* #(t/run-all-tests))
