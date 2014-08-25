@@ -13,7 +13,8 @@
   :node-dependencies [[bignumber.js "^1.4.1"]
                       [function-to-string "^0.2.0"]
                       [split "^0.3.0"]
-                      [closurecompiler-externs "^1.0.4"]]
+                      [closurecompiler-externs "^1.0.4"]
+                      [source-map-support "^0.2.7"]]
 
   :hooks [leiningen.cljsbuild]
 
@@ -30,7 +31,8 @@
                                      :compiler     {:target        :nodejs
                                                     :output-to     "target/test.js"
                                                     :output-dir    "target/test"
-                                                    :optimizations :simple
+                                                    :optimizations :none
+                                                    :source-map    true
                                                     :pretty-print  true}}}}
 
   :profiles {:dev {:plugins      [[lein-cljsbuild "1.0.3"]
