@@ -27,13 +27,14 @@
                                                     :pretty-print  false
                                                     :externs       ["node_modules/closurecompiler-externs/process.js"
                                                                     "node_modules/closurecompiler-externs/stream.js"]}}
-                              :test {:source-paths ["src" "test"]
-                                     :compiler     {:target        :nodejs
-                                                    :output-to     "target/test.js"
-                                                    :output-dir    "target/test"
-                                                    :optimizations :none
-                                                    :source-map    true
-                                                    :pretty-print  true}}}}
+                              :test {:source-paths   ["src" "test"]
+                                     :notify-command ["./run-tests.sh"]
+                                     :compiler       {:target        :nodejs
+                                                      :output-to     "target/test.js"
+                                                      :output-dir    "target/test"
+                                                      :optimizations :none
+                                                      :source-map    true
+                                                      :pretty-print  true}}}}
 
   :profiles {:dev {:plugins      [[lein-cljsbuild "1.0.3"]
                                   [lein-npm "0.4.0"]]
