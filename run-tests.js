@@ -4,5 +4,5 @@ try {
 }
 require('./target/test/goog/bootstrap/nodejs.js');
 require('./target/test.js');
-goog.require("kbilling.plans.test");
+goog.require("kbilling.calc.test");
 goog.require("cljs.nodejscli");

@@ -1,4 +1,4 @@
-(ns kbilling.plans)
+(ns kbilling.calc.plans)
 
 (def reflect-fn (js/require "function-to-string"))
 

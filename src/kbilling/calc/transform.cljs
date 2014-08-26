@@ -1,4 +1,4 @@
-(ns kbilling.plans.transform)
+(ns kbilling.calc.transform)
 
 (def BigNumber (js/require "bignumber.js"))
 

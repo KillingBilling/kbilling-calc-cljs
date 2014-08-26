@@ -1,5 +1,6 @@
-(ns kbilling.plans.main
-  (:require [kbilling.plans.transform :as t]
+(ns kbilling.calc.main
+  (:require [kbilling.calc.transform :as t]
+            [kbilling.calc.plans :as p]
             [cljs.nodejs :as node]
             [clojure.string :as string]))
 

@@ -1,7 +1,7 @@
-(ns kbilling.plans-test
+(ns kbilling.calc.plans-test
   (:require-macros [cemerick.cljs.test
                     :refer [is deftest with-test run-tests testing test-var]])
-  (:require [kbilling.plans :as p]
+  (:require [kbilling.calc.plans :as p]
             [cemerick.cljs.test :as t]))
 
 (def reflect-fn (js/require "function-to-string"))
