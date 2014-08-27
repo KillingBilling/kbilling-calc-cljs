@@ -10,7 +10,11 @@
 (def r (t/reader :json))
 
 (defn apply-transform [f s]
-  (->> s (t/read r) (f) (t/write w)))
+  (try
+    (case s "" "" (->> s (t/read r) (f) (t/write w)))
+    (catch js/Error e
+      (.error js/console (.-stack e))
+      "")))
 
 (defn pipe-through [f in out]
   (-> in (.pipe (split #(str (f %) "\n"))) (.pipe out)))
