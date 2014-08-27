@@ -1,4 +1,7 @@
-(ns kbilling.calc.transform)
+(ns kbilling.calc.transform
+  (:require-macros [cljs.core.match.macros :refer [match]])
+  (:require [kbilling.calc.plans :as p]
+            [cljs.core.match]))
 
 (def BigNumber (js/require "bignumber.js"))
 
@@ -70,7 +73,7 @@
     (merge vars acc-vars cost-vars agg-vars)))
 
 
-(defn apply-add-buy [plan cycles vars adds buys]
+(defn add-buy [plan cycles vars adds buys]
   (let [vars (merge-with +bign vars adds buys)
         cur (merge vars (aggregate plan cycles vars buys))]
     (merge cur (calculate plan cycles vars cur))))
@@ -86,5 +89,21 @@
   (into {} (for [[nk n-fn] (:$notifications plan)] [nk (n-fn vars)])))
 
 
-;TODO implement for real
-(defn transform [inobj] inobj)
+(defn transform-op [op]
+  (match [op]
+    [[:subscribe plan-path vars]] (let [plan (p/load-plan plan-path)
+                                        new-vars (subscribe plan vars)]
+                                    [new-vars (notifications plan new-vars)])
+
+    [[:cycle-begin plan-path cycle-k vars]] (let [plan (p/load-plan plan-path)
+                                                  new-vars (cycle-begin plan cycle-k vars)]
+                                              [new-vars (notifications plan new-vars)])
+
+    [[:add-buy plan-path cycles vars adds buys]] (let [plan (p/load-plan plan-path)
+                                                       new-vars (add-buy plan cycles vars adds buys)]
+                                                   [new-vars (notifications plan new-vars)])
+
+    :else [:error]
+    ))
+
+(defn transform [ops] (into {} (for [[k op] ops] [k (transform-op op)])))

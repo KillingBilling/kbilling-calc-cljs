@@ -21,7 +21,8 @@
           {:coverage 200
            :rub      60})))
 
-(def basic-plan (p/load-plan "test/kbilling/plans/examples/basic"))
+(def basic-plan-path "test/kbilling/plans/examples/basic")
+(def basic-plan (p/load-plan basic-plan-path))
 
 (deftest aggregate-test
   (is (=v (tf/aggregate basic-plan #{:monthly} {} {:coverage 200})
@@ -50,7 +51,7 @@
           {:rub 4000, :$subscription_rub_$cost 2800, :coverage 200})))
 
 (deftest apply-add-buy-test
-  (is (=v (tf/apply-add-buy basic-plan #{:monthly}
+  (is (=v (tf/add-buy basic-plan #{:monthly}
                             {:rub 1000, :$subscription_rub_$cost 2800}
                             {:rub 3000}
                             {:coverage 200})
@@ -112,3 +113,9 @@
          {:rubBelow0 false}))
   (is (= (tf/notifications basic-plan {:rub -10})
          {:rubBelow0 true})))
+
+;TODO (imikushin) write proper test
+(deftest transform-test
+  (println (tf/transform
+             {:a [:cycle-begin basic-plan-path :monthly {:rub 1000, :coverage 70000, :$subscription_rub_$cost 2800}]
+              :b []})))
