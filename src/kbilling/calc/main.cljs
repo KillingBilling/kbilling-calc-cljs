@@ -9,7 +9,7 @@
 (defn transform [s] (string/upper-case s))
 
 (defn pipe-through [f in out]
-  (-> in (.pipe (split (fn [s] (str (f s) "\n")))) (.pipe out)))
+  (-> in (.pipe (split #(str (f %) "\n"))) (.pipe out)))
 
 (defn -main [& args]
   (pipe-through transform (.-stdin js/process) (.-stdout js/process)))

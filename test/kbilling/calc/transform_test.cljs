@@ -1,10 +1,8 @@
 (ns kbilling.calc.transform-test
-  (:require-macros [cemerick.cljs.test
-                    :refer [is deftest with-test run-tests testing test-var]])
+  (:require-macros [cemerick.cljs.test :refer [is deftest with-test run-tests testing test-var]])
   (:require [kbilling.calc.plans :as p]
             [kbilling.calc.transform :as tf]
-            [cemerick.cljs.test :as t]
-            [cljs.nodejs :as node]))
+            [cemerick.cljs.test :as t]))
 
 (def BigNumber (js/require "bignumber.js"))
 
