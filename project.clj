@@ -15,7 +15,6 @@
   :node-dependencies [[bignumber.js "^1.4.1"]
                       [function-to-string "^0.2.0"]
                       [split "^0.3.0"]
-                      [closurecompiler-externs "^1.0.4"]
                       [source-map-support "^0.2.7"]]
 
   :hooks [leiningen.cljsbuild]
@@ -25,10 +24,8 @@
                                      :compiler     {:target        :nodejs
                                                     :output-to     "target/main.js"
                                                     :output-dir    "target/main"
-                                                    :optimizations :advanced
-                                                    :pretty-print  false
-                                                    :externs       ["node_modules/closurecompiler-externs/process.js"
-                                                                    "node_modules/closurecompiler-externs/stream.js"]}}
+                                                    :optimizations :simple
+                                                    :pretty-print  true}}
                               :test {:source-paths   ["src" "test"]
                                      :notify-command ["node" "./run-tests.js"]
                                      :compiler       {:target        :nodejs
