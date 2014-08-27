@@ -8,7 +8,8 @@
                               :snapshots false}]]
 
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2311"]]
+                 [org.clojure/clojurescript "0.0-2311"]
+                 [com.cognitect/transit-cljs "0.8.184"]]
 
   :node-dependencies [[bignumber.js "^1.4.1"]
                       [function-to-string "^0.2.0"]

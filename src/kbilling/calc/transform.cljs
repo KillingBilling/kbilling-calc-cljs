@@ -86,4 +86,5 @@
   (into {} (for [[nk n-fn] (:$notifications plan)] [nk (n-fn vars)])))
 
 
-(defn transform [inobj])
+;TODO implement for real
+(defn transform [inobj] inobj)
