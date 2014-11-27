@@ -1,6 +1,9 @@
 # kbilling-plans-cljs
 
-A Clojure library designed to ... well, that part is up to you.
+KillingBilling calculation server.
+Use `nodemon` to autorestart. Usage:
+
+    nodemon -w deploy.txt --exitcrash target/main.js
 
 ## Development
 
@@ -21,7 +24,6 @@ Type `:cljs/quit` to stop the ClojureScript REPL.
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 KillingBilling Inc.
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License (see the file LICENSE).
