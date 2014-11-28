@@ -25,14 +25,13 @@
 
 (defn -main [& args]
   (let [app (express)
-        port 8000]  ; TODO use an arg or PORT env var
+        port (or (-> js/process .-env .-PORT) 8000)]
     (.use app (.text bodyParser (clj->js {:type "application/*"})))
     (.get app "/" (fn [req res] (.send res "Hello World")))
     (.post
       app "/"
       (fn [req res]
         (.format res (clj->js {"application/transit+json" #(.send res (apply-transform tf/transform (.-body req)))}))))
-
     (.listen app port #(.log js/console "Listening on port" port))))
 
 
