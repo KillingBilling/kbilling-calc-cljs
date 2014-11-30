@@ -6,6 +6,7 @@
 
 (def express (js/require "express"))
 (def body-parser (js/require "body-parser"))
+(def serve-static (js/require "serve-static"))
 
 (def app (express))
 (def port (or (-> js/process .-env .-PORT) 8000))
@@ -27,6 +28,7 @@
   (.use app (.text body-parser (clj->js {:type "application/*"})))
   (.get app "/" say-hi)
   (.post app "/" (do-post plans-dir))
+  (.use app (serve-static plans-dir))
   (.listen app port #(.log js/console "Listening on port" port)))
 
 

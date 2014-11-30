@@ -16,6 +16,7 @@
                       [body-parser "^1.9.3"]
                       [express "^4.10.4"]
                       [function-to-string "^0.2.0"]
+                      [serve-static "^1.7.1"]
                       [source-map-support "^0.2.7"]]
 
   :hooks [leiningen.cljsbuild]
