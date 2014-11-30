@@ -7,7 +7,9 @@
 (def reflect-fn (js/require "function-to-string"))
 
 
-(def basic-plan (p/load-plan "test/kbilling/plans/examples/basic"))
+(def load-plan (p/mk-load-plan "."))
+
+(def basic-plan (load-plan "test/kbilling/plans/examples/basic"))
 
 (deftest global-var-name-test
   (is (= "monthly_coverage_sum"

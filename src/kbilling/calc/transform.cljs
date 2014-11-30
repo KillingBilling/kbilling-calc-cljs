@@ -89,21 +89,21 @@
   (into {} (for [[nk n-fn] (:$notifications plan)] [nk (n-fn vars)])))
 
 
-(defn transform-op [op]
+(defn transform-op [load-plan op]
   (match [op]
-    [[:subscribe plan-path vars]] (let [plan (p/load-plan plan-path)
+    [[:subscribe plan-path vars]] (let [plan (load-plan plan-path)
                                         new-vars (subscribe plan vars)]
                                     [new-vars (notifications plan new-vars)])
 
-    [[:cycle-begin plan-path cycle-k vars]] (let [plan (p/load-plan plan-path)
+    [[:cycle-begin plan-path cycle-k vars]] (let [plan (load-plan plan-path)
                                                   new-vars (cycle-begin plan cycle-k vars)]
                                               [new-vars (notifications plan new-vars)])
 
-    [[:add-buy plan-path cycles vars adds buys]] (let [plan (p/load-plan plan-path)
+    [[:add-buy plan-path cycles vars adds buys]] (let [plan (load-plan plan-path)
                                                        new-vars (add-buy plan cycles vars adds buys)]
                                                    [new-vars (notifications plan new-vars)])
 
     :else [:error]
     ))
 
-(defn transform [ops] (into {} (for [[k op] ops] [k (transform-op op)])))
+(defn transform [load-plan ops] (into {} (for [[k op] ops] [k (transform-op load-plan op)])))

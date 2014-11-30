@@ -15,7 +15,3 @@
            (t/write w (some-transform o))))
     (is (= (main/apply-transform dup (t/write w a))
            (t/write w (dup a))))))
-
-(deftest apply-transfor-error-test
-  (is (= ""
-         (main/apply-transform some-transform ""))))

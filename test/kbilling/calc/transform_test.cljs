@@ -21,8 +21,10 @@
           {:coverage 200
            :rub      60})))
 
+(def load-plan (p/mk-load-plan "."))
+
 (def basic-plan-path "test/kbilling/plans/examples/basic")
-(def basic-plan (p/load-plan basic-plan-path))
+(def basic-plan (load-plan basic-plan-path))
 
 (deftest aggregate-test
   (is (=v (tf/aggregate basic-plan #{:monthly} {} {:coverage 200})
@@ -116,6 +118,6 @@
 
 ;TODO (imikushin) write proper test
 (deftest transform-test
-  (println (tf/transform
+  (println (tf/transform (p/mk-load-plan ".")
              {:a [:cycle-begin basic-plan-path :monthly {:rub 1000, :coverage 70000, :$subscription_rub_$cost 2800}]
               :b []})))

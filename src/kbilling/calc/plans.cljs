@@ -28,8 +28,10 @@
 
     :else x))
 
-(defn root-require [path]
-  (js/require (str (.cwd js/process) "/" path)))
+(def mod-path (js/require "path"))
 
-(def load-plan
-  (memoize #(load-v (js->clj (root-require %) :keywordize-keys true) [])))
+(defn root-require [root p]
+  (js/require (.resolve mod-path root p)))
+
+(defn mk-load-plan [root]
+  (memoize #(load-v (js->clj (root-require root %) :keywordize-keys true) [])))

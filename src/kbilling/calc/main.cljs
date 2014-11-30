@@ -1,31 +1,33 @@
 (ns kbilling.calc.main
-  (:require [kbilling.calc.transform :as tf]
+  (:require [kbilling.calc.plans :as p]
+            [kbilling.calc.transform :as tf]
             [cljs.nodejs :as node]
             [cognitect.transit :as t]))
 
 (def express (js/require "express"))
-(def bodyParser (js/require "body-parser"))
+(def body-parser (js/require "body-parser"))
+
+(def app (express))
+(def port (or (-> js/process .-env .-PORT) 8000))
 
 (def w (t/writer :json))
 (def r (t/reader :json))
 
-(defn apply-transform [f s]
-  (try
-    (case s "" "" (->> s (t/read r) (f) (t/write w)))
-    (catch js/Error e
-      (.error js/console (.-stack e))
-      "")))
+(defn apply-transform [f s] (->> s (t/read r) (f) (t/write w)))
 
-(defn -main [& args]
-  (let [app (express)
-        port (or (-> js/process .-env .-PORT) 8000)]
-    (.use app (.text bodyParser (clj->js {:type "application/*"})))
-    (.get app "/" (fn [req res] (.send res "Hello World")))
-    (.post
-      app "/"
-      (fn [req res]
-        (.format res (clj->js {"application/transit+json" #(.send res (apply-transform tf/transform (.-body req)))}))))
-    (.listen app port #(.log js/console "Listening on port" port))))
+(defn say-hi [req res] (.send res "How are you doing ;)"))
+
+(defn process-transit [load-plan]
+  (fn [req res] (.send res (apply-transform #(tf/transform load-plan %) (.-body req)))))
+
+(defn do-post [plans-dir]
+  (fn [req res] (.format res (clj->js {"application/transit+json" (process-transit (p/mk-load-plan plans-dir))}))))
+
+(defn -main [plans-dir & args]
+  (.use app (.text body-parser (clj->js {:type "application/*"})))
+  (.get app "/" say-hi)
+  (.post app "/" (do-post plans-dir))
+  (.listen app port #(.log js/console "Listening on port" port)))
 
 
 ;(node/enable-util-print!)
