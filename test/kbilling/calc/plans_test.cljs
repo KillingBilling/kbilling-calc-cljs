@@ -4,8 +4,6 @@
   (:require [kbilling.calc.plans :as p]
             [cemerick.cljs.test :as t]))
 
-(def reflect-fn (js/require "function-to-string"))
-
 
 (def load-plan (p/mk-load-plan "."))
 
@@ -22,7 +20,8 @@
 (deftest load-fn-test
   (let [f (js/eval "(function(coverage_sum) { return coverage_sum * 0.3 })")
         cost-fn (p/load-fn f [:$cycles :monthly :rub])]
-    (is (= 60 (cost-fn {:monthly_coverage_sum 200})))))
+    (is (= (cost-fn {:monthly_coverage_sum 200})
+           60))))
 
 (deftest cost-function
   (let [cost-fn (get-in basic-plan [:$cycles :monthly :rub :$cost])]

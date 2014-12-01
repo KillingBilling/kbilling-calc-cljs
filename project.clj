@@ -1,4 +1,5 @@
-(defproject kbilling-calc-cljs "0.1.0-SNAPSHOT"
+(defproject
+  kbilling-calc-cljs "0.1.0-SNAPSHOT"
   :description "KillingBilling JS plan calculation framework"
   :url "https://www.killingbilling.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -12,8 +13,8 @@
                  [com.cognitect/transit-cljs "0.8.192"]
                  [org.clojure/core.match "0.2.2"]]
 
-  :node-dependencies [[bignumber.js "^1.4.1"]
-                      [body-parser "^1.9.3"]
+  :node-dependencies [[body-parser "^1.9.3"]
+                      [decimal.js "^4.0.0"]
                       [express "^4.10.4"]
                       [function-to-string "^0.2.0"]
                       [serve-static "^1.7.1"]

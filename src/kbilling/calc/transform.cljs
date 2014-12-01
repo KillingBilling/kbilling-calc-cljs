@@ -1,9 +1,8 @@
 (ns kbilling.calc.transform
   (:require-macros [cljs.core.match.macros :refer [match]])
-  (:require [kbilling.calc.plans :as p]
-            [cljs.core.match]))
+  (:require [cljs.core.match]))
 
-(def BigNumber (js/require "bignumber.js"))
+(def Decimal (js/require "decimal.js"))
 
 
 (def k_ (memoize (fn [a & others] (keyword (apply str (name a) (for [s others, _ [\_ (name s)]] _))))))
@@ -22,8 +21,8 @@
                  [acck acc] c :let [cost-fn (:$cost acc)] :when cost-fn]
              [(k_ ck acck :$cost) (cost-fn cur)])))
 
-(defn +bign [x y] (.plus (BigNumber. (or x 0)) (BigNumber. (or y 0))))
-(defn -bign [x y] (.minus (BigNumber. (or x 0)) (BigNumber. (or y 0))))
+(defn +bign [x y] (.plus (Decimal. (or x 0)) (Decimal. (or y 0))))
+(defn -bign [x y] (.minus (Decimal. (or x 0)) (Decimal. (or y 0))))
 
 (defn apply-costs [vars costs]
   (let [cost-deltas (for [[costk costv] costs

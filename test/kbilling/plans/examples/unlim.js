@@ -1,8 +1,8 @@
 'use strict';
 
-var BigNumber = require('bignumber.js');
+var Decimal = require('decimal.js');
 
-var price = new BigNumber(5000);
+var price = 5000;
 
 module.exports = {
 
@@ -19,7 +19,7 @@ module.exports = {
   },
 
   $notifications: {
-    rubBelow0: function(rub) { return new BigNumber(rub).lt(0) }
+    rubBelow0: function(rub) { return rub.lt(0) }
   }
 
 };

@@ -1,10 +1,10 @@
 'use strict';
 
-var BigNumber = require('bignumber.js');
+var Decimal = require('decimal.js');
 
-var contactPrice = new BigNumber(0.3);
-var maxPrice = new BigNumber(7000); //BigNumber(600) * contactPrice;
-var min = function(x, y) { return x.comparedTo(y) < 0 ? x : y };
+var contactPrice = 0.3;
+var maxPrice = 7000; // new Decimal(600) * contactPrice;
+var min = function(x, y) { return x.cmp(y) < 0 ? x : y };
 
 module.exports = {
 
@@ -19,24 +19,22 @@ module.exports = {
       $duration: "1 month",
       coverage: {
         sum: {
-          $aggr: function(x, y) { return new BigNumber(x).plus(y) },
+          $aggr: function(x, y) { return x.plus(y) },
           $init: function() { return 0 }
         }
       },
       rub: {
-        $cost: function(coverage_sum) { return min(new BigNumber(coverage_sum).times(contactPrice), maxPrice) }
+        $cost: function(coverage_sum) { return min(coverage_sum.times(contactPrice), maxPrice) }
       }
     }
   },
 
   $values: {
-    rubOrCost: function(rub, monthly_rub_$cost) {
-      return new BigNumber(rub).greaterThan(monthly_rub_$cost) ? rub : monthly_rub_$cost
-    }
+    rubOrCost: function(rub, monthly_rub_$cost) { return rub.gt(monthly_rub_$cost) ? rub : monthly_rub_$cost }
   },
 
   $notifications: {
-    rubBelow0: function(rub) { return new BigNumber(rub).lt(0) }
+    rubBelow0: function(rub) { return rub.lt(0) }
   }
 
 };

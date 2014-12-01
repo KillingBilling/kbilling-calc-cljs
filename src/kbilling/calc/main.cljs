@@ -4,6 +4,7 @@
             [cljs.nodejs :as node]
             [cognitect.transit :as t]))
 
+(def Decimal (js/require "decimal.js"))
 (def express (js/require "express"))
 (def body-parser (js/require "body-parser"))
 (def serve-static (js/require "serve-static"))
@@ -11,8 +12,8 @@
 (def app (express))
 (def port (or (-> js/process .-env .-PORT) 8000))
 
-(def w (t/writer :json))
-(def r (t/reader :json))
+(def w (t/writer :json {:handlers {Decimal (t/write-handler (fn [_] "f") #(.toString %))}}))
+(def r (t/reader :json {:handlers {"f" #(Decimal. %)}}))
 
 (defn apply-transform [f s] (->> s (t/read r) (f) (t/write w)))
 
