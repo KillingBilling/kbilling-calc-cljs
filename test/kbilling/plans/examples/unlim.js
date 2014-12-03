@@ -2,7 +2,7 @@
 
 var Decimal = require('decimal.js');
 
-var price = 5000;
+var price = new Decimal(5000);
 
 module.exports = {
 

@@ -19,8 +19,10 @@
   IEquiv
   (-equiv [this other] (.eq this (decimal other))))
 
+(defn args [f] (.-params (reflect-fn f)))
+
 (defn load-fn [f path]
-  (let [params (vec (map (comp keyword #(global-var-name path %)) (.-params (reflect-fn f))))]
+  (let [params (vec (map (comp keyword #(global-var-name path %)) (args f)))]
     (fn [vars]
       (->> params
            (map (comp decimal #(vars %)))
@@ -33,6 +35,17 @@
                     (apply f)
                     decimal)))
 
+(defn aggregate? [v]
+  (and (vector? v) (every? fn? v)))
+
+(defn arity2key [n] (case n
+                      2 :$aggr
+                      1 :$iden
+                      0 :$init))
+
+(defn load-aggr [v]
+  (into {} (for [f v] [(arity2key (count (args f))) (dec-fn f)])))
+
 (defn load-v [x path]
   (cond
     (map? x)
@@ -40,8 +53,7 @@
                [k (cond
                     (= k :$begin) (set (map keyword v))
                     (= k :$cost) (load-fn v path)
-                    (= k :$aggr) (dec-fn v)
-                    (= k :$init) (dec-fn v)
+                    (aggregate? v) (load-aggr v)
                     (= path [:$values]) (load-fn v path)
                     (= path [:$notifications]) (load-fn v path)
                     :else (load-v v (conj path k)))]))

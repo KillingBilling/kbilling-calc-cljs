@@ -68,8 +68,8 @@
          #{:monthly})))
 
 (deftest acc-keys-test
-  (is (= #{:rub :coverage}
-         (tf/acc-keys basic-plan))))
+  (is (= (tf/acc-keys basic-plan)
+         #{:rub :coverage})))
 
 (deftest init-vars-test
   (is (= (tf/init-vars basic-plan #{:$subscription :monthly} {})
