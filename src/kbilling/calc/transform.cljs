@@ -1,6 +1,7 @@
 (ns kbilling.calc.transform
   (:require-macros [cljs.core.match.macros :refer [match]])
-  (:require [cljs.core.match]))
+  (:require [cljs.core.match]
+            [clojure.string]))
 
 (def Decimal (js/require "decimal.js"))
 

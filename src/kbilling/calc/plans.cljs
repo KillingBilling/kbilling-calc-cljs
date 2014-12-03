@@ -1,4 +1,5 @@
-(ns kbilling.calc.plans)
+(ns kbilling.calc.plans
+  (:require [clojure.string]))
 
 (def Decimal (js/require "decimal.js"))
 (def reflect-fn (js/require "function-to-string"))
