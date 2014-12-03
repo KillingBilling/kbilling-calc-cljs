@@ -1,9 +1,15 @@
 # kbilling-plans-cljs
 
 KillingBilling calculation server.
-Use `nodemon` to autorestart. Usage:
+Use `nodemon` to autorestart.
+Development:
 
-    nodemon -w deploy.txt --exitcrash target/main.js
+    PORT=8888 nodemon -w target/main/ run-main.js .
+
+Production:
+
+    nodemon -w deploy.txt --exitcrash target/main.js .
+
 
 ## Development
 
@@ -19,8 +25,8 @@ To start Node.js ClojureScript REPL, run `lein repl` and then enter:
 (require '[cljs.repl.node :as nr])
 (nr/run-node-nrepl)
 ```
-
 Type `:cljs/quit` to stop the ClojureScript REPL.
+
 
 ## License
 
