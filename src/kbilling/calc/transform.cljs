@@ -21,7 +21,7 @@
 (defn can-apply-fn? [f vars] (and f (clojure.set/subset? (:params (meta f)) (set (keys vars)))))
 
 (defn calculate-costs [plan cycles cur]
-  (into {} (for [[ck c] (:$cycles plan) :when (or (= ck :$subscription) (contains? cycles ck))
+  (into {} (for [[ck c] (:$cycles plan) :when (contains? cycles ck)
                  [acck acc] c :let [cost-fn (:$cost acc)] :when (can-apply-fn? cost-fn cur)]
              [(k_ ck acck :$cost) (cost-fn cur)])))
 
