@@ -93,7 +93,14 @@
           :monthly_coverage_sum    0
           :monthly_rub_$cost       0
           :$subscription_rub_$cost 2800
-          :rubOrCost               1000})))
+          :rubOrCost               1000}))
+  (is (= (tf/cycle-begin basic-plan :daily {:rub                     1000
+                                            :coverage                0
+                                            :$subscription_rub_$cost 2800})
+         {:rub                     1000
+          :daily_rub_$cost         0
+          :coverage                0
+          :$subscription_rub_$cost 2800})))
 
 (deftest subscribe-test
   (is (= (tf/subscribe basic-plan {})

@@ -22,12 +22,13 @@
 (defn args [f] (.-params (reflect-fn f)))
 
 (defn load-fn [f path]
-  (let [params (vec (map (comp keyword #(global-var-name path %)) (args f)))]
-    (fn [vars]
-      (->> params
-           (map (comp decimal #(vars %)))
-           (apply f)
-           decimal))))
+  (let [params (vec (map (comp keyword #(global-var-name path %)) (args f)))
+        f (fn [vars]
+            (->> params
+                 (map (comp decimal #(vars %)))
+                 (apply f)
+                 decimal))]
+    (with-meta f {:params params})))
 
 (defn dec-fn [f]
   (fn [& args] (->> args

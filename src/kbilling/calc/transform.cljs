@@ -1,6 +1,7 @@
 (ns kbilling.calc.transform
   (:require-macros [cljs.core.match.macros :refer [match]])
   (:require [cljs.core.match]
+            [clojure.set]
             [clojure.string]))
 
 (def Decimal (js/require "decimal.js"))
@@ -17,9 +18,11 @@
              [k ((:$aggr agg) (or (k vars) ((:$init agg))) (acck buys))])))
 
 
+(defn can-apply-fn? [f vars] (and f (clojure.set/subset? (:params (meta f)) (set (keys vars)))))
+
 (defn calculate-costs [plan cycles cur]
   (into {} (for [[ck c] (:$cycles plan) :when (or (= ck :$subscription) (contains? cycles ck))
-                 [acck acc] c :let [cost-fn (:$cost acc)] :when cost-fn]
+                 [acck acc] c :let [cost-fn (:$cost acc)] :when (can-apply-fn? cost-fn cur)]
              [(k_ ck acck :$cost) (cost-fn cur)])))
 
 (defn +bign [x y] (.plus (Decimal. (or x 0)) (Decimal. (or y 0))))
@@ -37,7 +40,7 @@
                   (map (fn [[acck delta]] [acck (-bign (acck vars) delta)]))))))
 
 (defn calculate-values [plan cur]
-  (into {} (for [[val-k val-fn] (or (:$values plan) [])]
+  (into {} (for [[val-k val-fn] (or (:$values plan) []) :when (can-apply-fn? val-fn cur)]
              [val-k (val-fn cur)])))
 
 (defn calculate-no-values [plan cycles vars cur]
@@ -88,7 +91,7 @@
 (defn subscribe [plan vars] (cycle-begin plan :$subscription vars))
 
 (defn notifications [plan vars]
-  (into {} (for [[nk n-fn] (:$notifications plan)] [nk (n-fn vars)])))
+  (into {} (for [[nk n-fn] (:$notifications plan) :when (can-apply-fn? n-fn vars)] [nk (n-fn vars)])))
 
 
 (defn transform-op [load-plan op]
