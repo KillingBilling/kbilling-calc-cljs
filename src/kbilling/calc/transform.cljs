@@ -55,19 +55,21 @@
 (defn transitive-billing-cycles [plan ck]
   (transitive-image #(or (-> plan :$cycles % :$begin) #{}) #{} ck))
 
+(defn var? [key] (not (contains? #{:$begin :$duration} key)))
+
 (def acc-keys
   (memoize #(into #{} (for [[_ c] (:$cycles %)
-                            [acck _] c :when (not (contains? #{:$begin :$duration} acck))]
+                            [acck _] c :when (var? acck)]
                         acck))))
 
 (defn init-vars [plan cycles vars]
   (let [acc-vars (into {} (for [acck (acc-keys plan) :when (not (acck vars))]
                             [acck 0]))
         cost-vars (into {} (for [[ck c] (:$cycles plan) :when (contains? cycles ck)
-                                 [acck acc] c :when (and (not (contains? #{:$begin :$duration} acck)) (:$cost acc))]
+                                 [acck acc] c :when (and (var? acck) (:$cost acc))]
                              [(k_ ck acck :$cost) 0]))
         agg-vars (into {} (for [[ck c] (:$cycles plan) :when (contains? cycles ck)
-                                [acck acc] c :when (not (contains? #{:$begin :$duration} acck))
+                                [acck acc] c :when (var? acck)
                                 [aggk agg] acc :let [agg-init (:$init agg)] :when agg-init]
                             [(k_ ck acck aggk) (agg-init)]))]
     (merge vars acc-vars cost-vars agg-vars)))
