@@ -10,12 +10,20 @@
 (def k_ (memoize (fn [a & others] (keyword (apply str (name a) (for [s others, _ [\_ (name s)]] _))))))
 
 
+(defn apply-agg [agg x y]
+  (let [f (:$aggr agg)
+        f1 (:$iden agg)
+        f0 (:$init agg)]
+    (if x (f x y) (if f0
+                    (f (f0) y)
+                    (f1 y)))))
+
 (defn aggregate [plan cycles vars buys]
   (into {} (for [[ck c] (:$cycles plan) :when (or (= ck :$subscription) (contains? cycles ck))
                  [acck acc] c :when (contains? buys acck)
                  [aggk agg] acc
                  :let [k (k_ ck acck aggk)]]
-             [k ((:$aggr agg) (or (k vars) ((:$init agg))) (acck buys))])))
+             [k (apply-agg agg (k vars) (acck buys))])))
 
 
 (defn can-apply-fn? [f vars] (and f (clojure.set/subset? (:params (meta f)) (set (keys vars)))))

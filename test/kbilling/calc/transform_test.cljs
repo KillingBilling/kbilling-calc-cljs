@@ -24,7 +24,14 @@
 
 (deftest aggregate-test
   (is (= (tf/aggregate basic-plan #{:monthly} {} {:coverage 200})
-         {:monthly_coverage_sum 200})))
+         {:monthly_coverage_sum 200}))
+  (is (= (tf/aggregate basic-plan #{:daily} {} {:coverage 10})
+         {:daily_coverage_max 10
+          :daily_coverage_min 10}))
+  (is (= (tf/aggregate basic-plan #{:daily} {:daily_coverage_max 10
+                                             :daily_coverage_min 10} {:coverage 200})
+         {:daily_coverage_max 200
+          :daily_coverage_min 10})))
 
 (deftest calculate-costs-test
   (is (= (tf/calculate-costs basic-plan #{:monthly} {:coverage 200, :monthly_coverage_sum 200})
