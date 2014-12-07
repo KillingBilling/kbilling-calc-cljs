@@ -19,7 +19,7 @@
                     (f1 y)))))
 
 (defn aggregate [plan cycles vars buys]
-  (into {} (for [[ck c] (:$cycles plan) :when (or (= ck :$subscription) (contains? cycles ck))
+  (into {} (for [[ck c] (:$cycles plan) :when (contains? cycles ck)
                  [acck acc] c :when (contains? buys acck)
                  [aggk agg] acc
                  :let [k (k_ ck acck aggk)]]
@@ -69,9 +69,9 @@
 (defn var? [key] (not (contains? #{:$begin :$duration} key)))
 
 (def acc-keys
-  (memoize #(into #{} (for [[_ c] (:$cycles %)
-                            [acck _] c :when (var? acck)]
-                        acck))))
+  (memoize (fn [plan] (into #{} (for [[_ c] (:$cycles plan)
+                                      [acck _] c :when (var? acck)]
+                                  acck)))))
 
 (defn init-vars [plan cycles vars]
   (let [acc-vars (into {} (for [acck (acc-keys plan) :when (not (acck vars))]
@@ -88,6 +88,7 @@
 
 (defn add-buy [plan cycles vars adds buys]
   (let [vars (merge-with +bign vars adds buys)
+        cycles (conj cycles :$subscription)
         cur (merge vars (aggregate plan cycles vars buys))]
     (merge cur (calculate plan cycles vars cur))))
 
@@ -101,9 +102,22 @@
 (defn notifications [plan vars]
   (into {} (for [[nk n-fn] (:$notifications plan) :when (can-apply-fn? n-fn vars)] [nk (n-fn vars)])))
 
+(defn var-keys [plan]
+  (let [nots (into #{} (->> plan :$notifications keys))
+        vals (into #{} (->> plan :$values keys))
+        accs (acc-keys plan)
+        aggs (into #{} (for [[ck c] (:$cycles plan)
+                             [acck acc] c :when (var? acck)
+                             [aggk _] acc]
+                         (k_ ck acck aggk)))]
+    (clojure.set/union accs aggs vals nots)))
 
 (defn transform-op [load-plan op]
   (match [op]
+    [[:schema plan-paths]] (into #{} (for [plan-path plan-paths
+                                           :let [plan (load-plan plan-path)]
+                                           vark (var-keys plan)] vark))
+
     [[:subscribe plan-path vars]] (let [plan (load-plan plan-path)
                                         new-vars (subscribe plan vars)]
                                     [new-vars (notifications plan new-vars)])

@@ -9,11 +9,7 @@ var max = function(x, y) { return x.cmp(y) > 0 ? x : y };
 var identity = function(x) { return x };
 
 var aggr = {
-  sum: [
-    function(x, y) { return x.plus(y) },
-    function(x) { return x },
-    function() { return 0 }
-  ],
+  sum: [function(x, y) { return x.plus(y) }, identity, function() { return 0 }],
   min: [min, identity],
   max: [max, identity]
 };

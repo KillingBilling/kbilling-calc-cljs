@@ -22,6 +22,15 @@
 (def basic-plan-path "test/kbilling/plans/examples/basic")
 (def basic-plan (load-plan basic-plan-path))
 
+(deftest var-keys-test
+  (is (= (tf/var-keys basic-plan)
+         #{:rub :coverage
+           :$subscription_rub_$cost
+           :monthly_coverage_sum :monthly_rub_$cost
+           :daily_coverage_max :daily_coverage_min :daily_rub_$cost
+           :rubOrCost
+           :rubBelow0})))
+
 (deftest aggregate-test
   (is (= (tf/aggregate basic-plan #{:monthly} {} {:coverage 200})
          {:monthly_coverage_sum 200}))
