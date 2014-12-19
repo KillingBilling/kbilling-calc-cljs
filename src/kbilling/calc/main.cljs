@@ -25,12 +25,14 @@
 (defn do-post [plans-dir]
   (fn [req res] (.format res (clj->js {"application/transit+json" (process-transit (p/mk-load-plan plans-dir))}))))
 
-(defn -main [plans-dir & args]
-  (.use app (.text body-parser (clj->js {:type "application/*"})))
-  (.get app "/" say-hi)
-  (.post app "/" (do-post plans-dir))
-  (.use app (serve-static plans-dir))
-  (.listen app port #(.log js/console "Listening on port" port)))
+(defn -main
+  ([] (-main "."))
+  ([plans-dir]
+    (.use app (.text body-parser (clj->js {:type "application/*"})))
+    (.get app "/" say-hi)
+    (.post app "/" (do-post plans-dir))
+    (.use app (serve-static plans-dir))
+    (.listen app port #(.log js/console "Listening on port" port))))
 
 
 ;(node/enable-util-print!)
