@@ -114,9 +114,9 @@
 
 (defn transform-op [load-plan op]
   (match [op]
-    [[:schema plan-paths]] (into #{} (for [plan-path plan-paths
-                                           :let [plan (load-plan plan-path)]
-                                           vark (var-keys plan)] vark))
+    [[:var-keys plan-paths]] (into #{} (for [plan-path plan-paths
+                                             :let [plan (load-plan plan-path)]
+                                             vark (var-keys plan)] vark))
 
     [[:subscribe plan-path vars]] (let [plan (load-plan plan-path)
                                         new-vars (subscribe plan vars)]
