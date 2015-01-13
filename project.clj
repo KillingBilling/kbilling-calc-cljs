@@ -9,8 +9,8 @@
                               :snapshots false}]]
 
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2371"]
-                 [com.cognitect/transit-cljs "0.8.192"]
+                 [org.clojure/clojurescript "0.0-2665"]
+                 [com.cognitect/transit-cljs "0.8.199"]
                  [org.clojure/core.match "0.2.2"]]
 
   :node-dependencies [[body-parser "^1.9.3"]
@@ -42,7 +42,7 @@
   :profiles {:dev {:plugins      [[lein-cljsbuild "1.0.4-SNAPSHOT"]
                                   [lein-npm "0.4.0"]]
                    :dependencies [[org.bodil/cljs-noderepl "0.1.11"]
-                                  [com.cemerick/clojurescript.test "0.3.1"]]}}
+                                  [com.cemerick/clojurescript.test "0.3.3"]]}}
 
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]} ;Node.js ClojureScript REPL support
 

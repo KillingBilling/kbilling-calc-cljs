@@ -30,6 +30,6 @@ Type `:cljs/quit` to stop the ClojureScript REPL.
 
 ## License
 
-Copyright © 2014 KillingBilling Inc.
+Copyright © 2015 KillingBilling Inc.
 
 Distributed under the Eclipse Public License (see the file LICENSE).
