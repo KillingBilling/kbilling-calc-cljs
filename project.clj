@@ -39,8 +39,8 @@
                                                       :source-map    true
                                                       :pretty-print  true}}}}
 
-  :profiles {:dev {:plugins      [[lein-cljsbuild "1.0.4-SNAPSHOT"]
-                                  [lein-npm "0.4.0"]]
+  :profiles {:dev {:plugins      [[lein-cljsbuild "1.0.4"]
+                                  [lein-npm "0.5.0"]]
                    :dependencies [[org.bodil/cljs-noderepl "0.1.11"]
                                   [com.cemerick/clojurescript.test "0.3.3"]]}}
 
