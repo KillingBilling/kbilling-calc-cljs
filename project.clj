@@ -9,8 +9,8 @@
                               :snapshots false}]]
 
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2665"]
-                 [com.cognitect/transit-cljs "0.8.199"]
+                 [org.clojure/clojurescript "0.0-2727"]
+                 [com.cognitect/transit-cljs "0.8.202"]
                  [org.clojure/core.match "0.2.2"]]
 
   :node-dependencies [[body-parser "^1.9.3"]
