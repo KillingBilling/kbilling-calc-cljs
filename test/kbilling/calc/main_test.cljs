@@ -1,8 +1,7 @@
 (ns kbilling.calc.main-test
-  (:require-macros [cemerick.cljs.test :refer [is deftest with-test run-tests testing test-var]])
   (:require [kbilling.calc.main :as main :refer [r w]]
             [cognitect.transit :as t]
-            [cemerick.cljs.test]))
+            [cemerick.cljs.test :refer-macros [is deftest with-test run-tests testing test-var]]))
 
 (def Decimal (js/require "decimal.js"))
 

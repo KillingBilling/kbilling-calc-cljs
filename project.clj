@@ -1,5 +1,4 @@
-(defproject
-  kbilling-calc-cljs "0.1.0-SNAPSHOT"
+(defproject kbilling-calc-cljs "0.1.0-SNAPSHOT"
   :description "KillingBilling JS plan calculation framework"
   :url "https://www.killingbilling.com/FIXME"
   :license {:name "Eclipse Public License"

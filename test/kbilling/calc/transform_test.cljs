@@ -1,8 +1,7 @@
 (ns kbilling.calc.transform-test
-  (:require-macros [cemerick.cljs.test :refer [is deftest with-test run-tests testing test-var]])
   (:require [kbilling.calc.plans :as p]
             [kbilling.calc.transform :as tf]
-            [cemerick.cljs.test]))
+            [cemerick.cljs.test :refer-macros [is deftest with-test run-tests testing test-var]]))
 
 (def Decimal (js/require "decimal.js"))
 
@@ -48,7 +47,7 @@
 
 (deftest apply-costs-test
   (is (= (tf/apply-costs {:rub 350, :monthly_rub_$cost 10, :$subscription_rub_$cost 2700}
-                         {:monthly_rub_$cost 60, :$subscription_rub_$cost 2800})
+           {:monthly_rub_$cost 60, :$subscription_rub_$cost 2800})
          {:rub 200})))
 
 (deftest calculate-test
@@ -64,9 +63,9 @@
 
 (deftest apply-add-buy-test
   (is (= (tf/add-buy basic-plan #{:monthly}
-                     {:rub 1000, :$subscription_rub_$cost 2800}
-                     {:rub 3000}
-                     {:coverage 200})
+           {:rub 1000, :$subscription_rub_$cost 2800}
+           {:rub 3000}
+           {:coverage 200})
          {:rub                     3940
           :coverage                200
           :monthly_coverage_sum    200
@@ -137,5 +136,5 @@
 ;TODO (imikushin) write proper test
 (deftest transform-test
   (println (tf/transform (p/mk-load-plan ".")
-                         {:a [:cycle-begin basic-plan-path :monthly {:rub 1000, :coverage 70000, :$subscription_rub_$cost 2800}]
-                          :b []})))
+             {:a [:cycle-begin basic-plan-path :monthly {:rub 1000, :coverage 70000, :$subscription_rub_$cost 2800}]
+              :b []})))
