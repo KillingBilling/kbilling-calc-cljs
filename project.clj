@@ -7,39 +7,39 @@
   :repositories [["sonatype" {:url       "https://oss.sonatype.org/content/repositories/releases"
                               :snapshots false}]]
 
-  :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2816"]
-                 [com.cognitect/transit-cljs "0.8.205"]
-                 [org.clojure/core.match "0.2.2"]]
+  :dependencies [[org.clojure/clojure "1.7.0"]
+                 [org.clojure/clojurescript "1.7.145"]
+                 [com.cognitect/transit-cljs "0.8.225"]
+                 [org.clojure/core.match "0.3.0-alpha4"]]
 
-  :node-dependencies [[body-parser "^1.9.3"]
-                      [decimal.js "^4.0.0"]
-                      [express "^4.10.4"]
-                      [function-to-string "^0.2.0"]
-                      [serve-static "^1.7.1"]
-                      [source-map-support "^0.2.7"]]
+  :npm {:dependencies [[body-parser "^1.9.3"]
+                       [decimal.js "^4.0.0"]
+                       [express "^4.10.4"]
+                       [function-to-string "^0.2.0"]
+                       [serve-static "^1.7.1"]
+                       [source-map-support "^0.3.2"]]}
 
   :hooks [leiningen.cljsbuild]
 
-  :cljsbuild {:test-commands {"unit-tests" ["node" "./run-tests.js"]}
+  :cljsbuild {:test-commands {"unit-tests" ["node" "target/test.js"]}
               :builds        {:main {:source-paths ["src"]
                                      :compiler     {:target        :nodejs
+                                                    :main          "kbilling.calc.main"
                                                     :output-to     "target/main.js"
                                                     :output-dir    "target/main"
                                                     :optimizations :none
-                                                    :source-map    true
-                                                    :pretty-print  true}}
+                                                    :source-map    true}}
                               :test {:source-paths   ["src" "test"]
-                                     :notify-command ["node" "./run-tests.js"]
+                                     :notify-command ["node" "target/test.js"]
                                      :compiler       {:target        :nodejs
+                                                      :main          "kbilling.calc.test"
                                                       :output-to     "target/test.js"
                                                       :output-dir    "target/test"
                                                       :optimizations :none
-                                                      :source-map    true
-                                                      :pretty-print  true}}}}
+                                                      :source-map    true}}}}
 
-  :profiles {:dev {:plugins      [[lein-cljsbuild "1.0.4"]
-                                  [lein-npm "0.5.0"]]
+  :profiles {:dev {:plugins      [[lein-cljsbuild "1.1.0"]
+                                  [lein-npm "0.6.1"]]
                    :dependencies [[org.bodil/cljs-noderepl "0.1.11"]
                                   [com.cemerick/clojurescript.test "0.3.3"]]}}
 

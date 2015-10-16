@@ -1,5 +1,5 @@
 (ns kbilling.calc.test
-  (:require [cemerick.cljs.test :as t]
+  (:require [cljs.test :as t :include-macros true]
             [cljs.nodejs :as node]
             [kbilling.calc.plans-test]
             [kbilling.calc.transform-test]

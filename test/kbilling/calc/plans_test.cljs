@@ -1,6 +1,6 @@
 (ns kbilling.calc.plans-test
   (:require [kbilling.calc.plans :as p]
-            [cemerick.cljs.test :refer-macros [is deftest with-test run-tests testing test-var]]))
+            [cljs.test :refer-macros [is deftest]]))
 
 
 (def load-plan (p/mk-load-plan "."))

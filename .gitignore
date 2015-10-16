@@ -11,3 +11,4 @@ pom.xml.asc
 /.nrepl-port
 /node_modules
 deploy.txt
+/*-init.clj

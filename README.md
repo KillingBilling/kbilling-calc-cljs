@@ -4,7 +4,7 @@ KillingBilling calculation server.
 Use `nodemon` to autorestart.
 Development:
 
-    PORT=8888 nodemon -w target/main/ run-main.js .
+    PORT=8888 nodemon -w target/main/ target/main.js .
 
 Production:
 

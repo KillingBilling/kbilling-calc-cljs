@@ -1,5 +1,5 @@
 (ns kbilling.calc.transform
-  (:require-macros [cljs.core.match.macros :refer [match]])
+  (:require-macros [cljs.core.match :refer [match]])
   (:require [cljs.core.match]
             [clojure.set]
             [clojure.string]))

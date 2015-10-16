@@ -1,7 +1,7 @@
 (ns kbilling.calc.transform-test
   (:require [kbilling.calc.plans :as p]
             [kbilling.calc.transform :as tf]
-            [cemerick.cljs.test :refer-macros [is deftest with-test run-tests testing test-var]]))
+            [cljs.test :refer-macros [is deftest]]))
 
 (def Decimal (js/require "decimal.js"))
 
