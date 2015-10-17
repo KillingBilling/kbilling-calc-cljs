@@ -28,7 +28,7 @@
                                                     :output-to     "target/main.js"
                                                     :output-dir    "target/main"
                                                     :optimizations :none
-                                                    :source-map    true}}
+                                                    :static-fns    true}}
                               :test {:source-paths   ["src" "test"]
                                      :notify-command ["node" "target/test.js"]
                                      :compiler       {:target        :nodejs
@@ -36,7 +36,7 @@
                                                       :output-to     "target/test.js"
                                                       :output-dir    "target/test"
                                                       :optimizations :none
-                                                      :source-map    true}}}}
+                                                      :static-fns    true}}}}
 
   :profiles {:dev {:plugins      [[lein-cljsbuild "1.1.0"]
                                   [lein-npm "0.6.1"]]
